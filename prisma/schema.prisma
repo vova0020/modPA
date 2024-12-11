@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,107 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// Модель пользователя
+model User {
+  id        Int      @id @default(autoincrement())
+  firstName String?
+  lastName  String?
+  login     String   @unique
+  password  String
+  roleId    Int? // Внешний ключ для связи с Role
+  role      Role?    @relation(fields: [roleId], references: [id])
+  sectionId Int? // Внешний ключ для связи с Section
+  section   Section? @relation(fields: [sectionId], references: [id])
+  machineId Int? // Внешний ключ для связи с Machine
+  machine   Machine? @relation(fields: [machineId], references: [id])
+}
+
+// Модель роли
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String
+  users User[] // Связь с пользователями
+}
+
+// Модель участка
+model Section {
+  id       Int       @id @default(autoincrement())
+  name     String
+  machines Machine[] // Связь со станками
+  users    User[] // Связь с пользователями
+}
+
+// Модель станка
+model Machine {
+  id              Int             @id @default(autoincrement())
+  name            String
+  sectionId       Int? // Внешний ключ для связи с Section
+  section         Section?        @relation(fields: [sectionId], references: [id])
+  unitId          Int? // Внешний ключ для связи с Unit
+  unit            Unit?           @relation(fields: [unitId], references: [id])
+  outputs         Output[] // Связь с выработками
+  downtimes       Downtime[] // Связь с простоями
+  statusId        Int? // Внешний ключ для текущего статуса
+  status          Status?         @relation(fields: [statusId], references: [id])
+  users           User[] // Обратная связь с пользователями
+  statusHistories StatusHistory[] // Обратная связь с историей статусов
+}
+
+// Модель единицы измерения
+model Unit {
+  id       Int       @id @default(autoincrement())
+  name     String
+  machines Machine[] // Связь со станками
+  outputs  Output[] // Связь с выработками
+}
+
+// Модель выработки
+model Output {
+  id        Int      @id @default(autoincrement())
+  quantity  Float
+  date      DateTime
+  unitId    Int // Внешний ключ для связи с Unit
+  unit      Unit     @relation(fields: [unitId], references: [id])
+  machineId Int // Внешний ключ для связи с Machine
+  machine   Machine  @relation(fields: [machineId], references: [id])
+}
+
+// Модель простоя
+model Downtime {
+  id        Int             @id @default(autoincrement())
+  quantity  Float
+  date DateTime
+  machineId Int // Внешний ключ для связи с Machine
+  machine   Machine         @relation(fields: [machineId], references: [id])
+  reasonId  Int? // Внешний ключ для связи с DowntimeReason
+  reason    DowntimeReason? @relation(fields: [reasonId], references: [id])
+}
+
+// Модель причины простоя
+model DowntimeReason {
+  id        Int        @id @default(autoincrement())
+  name      String
+  downtimes Downtime[] // Связь с простоями
+}
+
+// Модель статуса
+model Status {
+  id        Int             @id @default(autoincrement())
+  name      String
+  machines  Machine[] // Связь со станками
+  histories StatusHistory[] // Связь с историей статусов
+}
+
+// Модель истории статусов
+model StatusHistory {
+  id        Int       @id @default(autoincrement())
+  machineId Int
+  comment String?
+  machine   Machine   @relation(fields: [machineId], references: [id])
+  statusId  Int
+  status    Status    @relation(fields: [statusId], references: [id])
+  startDate DateTime
+  endDate   DateTime?
 }

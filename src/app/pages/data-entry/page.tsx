@@ -1,183 +1,657 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { 
-    Button, CssBaseline, TextField, MenuItem, Grid, Box, Typography, 
-    Container, Paper, Fade, Snackbar, Alert, IconButton 
-} from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AddCircle, RemoveCircle } from '@mui/icons-material';
-import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#1976d2',
-        },
-        secondary: {
-            main: '#ff4081',
-        },
-        background: {
-            default: '#f4f6f8',
-        },
-    },
-    typography: {
-        fontFamily: 'Roboto, sans-serif',
-    },
-});
-
-type DowntimeEntry = {
-    reason: string;
-    time: number | null;
-};
-
-type FormInputs = {
-    productivity: number;
-    downtimes: DowntimeEntry[];
-};
+import React, { useEffect, useState } from 'react';
+import WorkOffIcon from '@mui/icons-material/WorkOff';
+import Navbar from '@/app/components/navbar';
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+import EditIcon from '@mui/icons-material/Edit';
+import Findings from '@/app/components/findings'; // Импортируем компонент Findings
+import { TextField, MenuItem } from '@mui/material';
+import DangerousIcon from '@mui/icons-material/Dangerous';
+import WarningIcon from '@mui/icons-material/Warning';
 
 export default function OperatorsForm() {
-    const { register, handleSubmit, watch, formState: { errors }, setValue, reset } = useForm<FormInputs>({
-        defaultValues: {
-            downtimes: [{ reason: '', time: null }],
-        },
-    });
+    const [data, setData] = useState([]); // Хранит заявки
+    const [token, setToken] = useState<string | null>(null); // Токен пользователя
+    const [userId, setUserId] = useState<number | null>(null); // Идентификатор пользователя
+    const [isModalOpen, setIsModalOpen] = useState(false); // Управление видимостью модального окна
+    const [isMobile, setIsMobile] = useState(false);
 
-    const [formKey, setFormKey] = useState(0);
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
 
-    const simpleReasons = ['Отсутствует оператор', 'Наладка', 'Уборка', 'Поломка', 'Другая причина'];
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const downtimes = watch("downtimes");
+        handleResize(); // Вызываем один раз при монтировании компонента
 
-    const onSubmit: SubmitHandler<FormInputs> = (data) => {
-        console.log(data);
-        setOpenSnackbar(true);
-        reset(); // Сброс формы
-        setFormKey((prevKey) => prevKey + 1);
+        window.addEventListener('resize', handleResize); // Слушаем изменения размера окна
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken);
+            try {
+                const decoded: any = jwtDecode(storedToken);
+                setUserId(decoded.id);
+            } catch (error) {
+                console.error("Ошибка при декодировании токена:", error);
+            }
+        }
+    }, []);
+
+    const fetchRequests = async (userId: number) => {
+        try {
+            if (userId != null) {
+                const response = await axios.get('/api/data-entry/getData-entry', {
+                    params: { userId },
+                });
+                setData(response.data);
+                console.log(response.data);
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке заявок:', error);
+        }
     };
 
-    const handleSnackbarClose = () => {
-        setOpenSnackbar(false);
+    useEffect(() => {
+        fetchRequests(userId);
+        const intervalId = setInterval(() => {
+            fetchRequests(userId); // Обновляем данные
+        }, 4000); // Обновляем каждые 5 секунд
+
+        // Очищаем интервал при размонтировании компонента
+        return () => clearInterval(intervalId);
+    }, [userId]);
+
+
+    async function updateStatus(machineId: number, statusId: number) {
+        const response = await axios.put('/api/data-entry/putStatusData-entry', { machineId, statusId });
+        console.log('Данные успешно обновлены автоматом:', response.data);
+        fetchRequests(userId);
+    }
+
+
+
+    // Получение списка причин простоев
+    const [resone, setResone] = useState([]);
+    useEffect(() => {
+        // Создаем асинхронную функцию внутри useEffect
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('/api/getResone');
+                setResone(response.data); // Сохраняем данные
+                console.log(response.data);
+
+            } catch (error) {
+                console.log(`Ошибка при загрузке данных ${error}`); // Обработка ошибки
+            }
+        };
+
+        // Вызываем асинхронную функцию
+        fetchData();
+
+    }, []);
+
+
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editRowData, setEditRowData] = useState(null);
+
+
+    const openEditModal = (rowData) => {
+        setEditRowData(rowData);
+        setIsEditModalOpen(true);
     };
 
-    const addDowntime = () => {
-        setValue("downtimes", [...downtimes, { reason: '', time: null }]);
+    const saveEditChanges = async () => {
+        // Реализуйте сохранение изменений через API или обновление состояния
+        console.log('Сохраненные данные:', editRowData);
+        await axios.put('/api/data-entry/newData-entry', { editRowData })
+
+        setIsEditModalOpen(false);
+        fetchRequests(userId)
     };
 
-    const removeDowntime = (index: number) => {
-        const updatedDowntimes = downtimes.filter((_, i) => i !== index);
-        setValue("downtimes", updatedDowntimes);
+    // Состояния для управления модальными окнами и комментариями
+    const [isCrashModalOpen, setIsCrashModalOpen] = useState(false);
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [isConfirmNotificationOpen, setIsConfirmNotificationOpen] = useState(false);
+    const [isCrashComment, setIsCrashComment] = useState('');
+
+    // Функция для сохранения данных и закрытия модального окна
+    const saveEditChanges2 = () => {
+        // Открытие уведомления с вопросом
+        setIsNotificationOpen(true);
+        setIsCrashModalOpen(false); // Закрыть модальное окно редактирования
+    };
+
+    // Функция для обработки нажатия "Да" в уведомлении
+    const handleConfirmYes = () => {
+        setIsNotificationOpen(false); // Закрыть уведомление с вопросом
+        saveToDatabase(); // Сохранить данные в базу
+        setIsConfirmNotificationOpen(false); // Закрыть уведомление о мех службе (если оно открыто)
+    };
+
+    // Функция для обработки нажатия "Нет" в уведомлении
+    const handleConfirmNo = () => {
+        setIsNotificationOpen(false); // Закрыть уведомление с вопросом
+        setIsConfirmNotificationOpen(true); // Показать уведомление о необходимости уведомить мех службу
+    };
+
+    // Функция для сохранения данных в базу
+    const saveToDatabase = () => {
+        updateStatus(data.machine.id, 2)
+        console.log("Данные сохранены в базу", isCrashComment);
+        // Здесь добавьте вызов вашей функции для сохранения данных в базу данных
+    };
+
+    // Функция для обработки нажатия "Хорошо" в уведомлении о необходимости уведомления
+    const handleConfirmNotificationOk = () => {
+        saveToDatabase(); // Сохранить данные в базу
+        setIsConfirmNotificationOpen(false); // Закрыть уведомление о мех службе
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="md" sx={{ mt: 8 }}>
-                <CssBaseline />
-                <Paper elevation={3} sx={{ p: 4, borderRadius: '16px', backgroundColor: '#ffffff' }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Fade in>
-                                <PrecisionManufacturingIcon sx={{ fontSize: 70, color: "success.main" }} />
-                            </Fade>
-                            <Typography component="h1" variant="h4" sx={{ ml: 1, fontWeight: 'bold' }}>
-                                - BST
-                            </Typography>
-                        </Box>
+        <div>
+            <Navbar />
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '30px 0' }}>
+                <div
+                    style={{
+                        width: '95%',
+                        maxWidth: '900px',
+                        borderRadius: '15px',
+                        backgroundColor: '#f9f9f9',
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                        padding: '10px',
+                        textAlign: 'center',
+                        margin: '0 10px',
+                        position: 'relative',
+                    }}
+                >
+                    <h1 style={{ fontSize: '2.5rem', color: '#333' }}>{data.machine?.name}</h1>
 
-                        <Box component="form" key={formKey} onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 3 }}>
-                            {/* Выработка */}
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} sx={{ mt: 2, mb: 1 }}>
-                                    <Typography component="h2" variant="h6" sx={{ textAlign: 'center', borderBottom: '1px solid black' }}>
-                                        Данные о выработке оборудования
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
+                    {data.machine?.status?.name === 'Не работает' && (
+                        <div>
+                            <p style={{ fontSize: '1.2rem', color: '#f44336', marginTop: '20px' }}>
+                                Станок не работает
+                            </p>
+                            <button
+                                style={{
+                                    backgroundColor: '#4CAF50',
+                                    color: '#fff',
+                                    border: 'none',
+                                    padding: '10px 20px',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    marginTop: '15px',
+                                }}
+                                onClick={() => updateStatus(data.machine.id, 1)}
+                            >
+                                Начать работу
+                            </button>
+                        </div>
+                    )}
+                    {data.machine?.status?.name === 'Сломан' && (
+                        <div>
+                            <p style={{ fontSize: '1.2rem', color: '#f44336', marginTop: '20px' }}>
+                               {<WarningIcon fontSize='large'/>} Станок сломан. Обратитесь к мастеру!{<WarningIcon fontSize='large'/>}
+                            </p>
+
+                        </div>
+                    )}
+
+                    {data.machine?.status?.name === 'Работает' && (
+                        <div style={{ marginTop: '30px' }}>
+                            <button
+                                style={{
+                                    position: 'absolute',
+                                    top: '10px',
+                                    right: '10px',
+                                    backgroundColor: '#d2cc13',
+                                    color: '#fff',
+                                    border: 'none',
+                                    padding: '10px 20px',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                                onClick={() => updateStatus(data.machine.id, 3)}
+                            >
+                                {/* Условный рендеринг для текста и иконки */}
+                                {!isMobile && (
+                                    <span style={{ fontSize: '1rem' }}>Завершить работу</span>
+                                )}
+                                {isMobile && (
+                                    <WorkOffIcon style={{ fontSize: '20px' }} />
+                                )}
+                            </button>
+                            <button
+                                style={{
+                                    position: 'absolute',
+                                    top: '10px',
+                                    left: '10px',
+                                    backgroundColor: '#f44336',
+                                    color: '#fff',
+                                    border: 'none',
+                                    padding: '10px 20px',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                                onClick={() => setIsCrashModalOpen(true)}
+                            >
+                                {/* Условный рендеринг для текста и иконки */}
+                                {!isMobile && (
+                                    <span style={{ fontSize: '1rem' }}>Сломался</span>
+                                )}
+                                {isMobile && (
+                                    <DangerousIcon style={{ fontSize: '20px' }} />
+                                )}
+                            </button>
+
+                            <h2 style={{ fontSize: '1.8rem', color: '#555' }}>Данные за сегодня</h2>
+
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    marginTop: '20px',
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: '10px',
+                                        border: '1px solid #e0e0e0',
+                                        padding: '10px',
+                                        width: '48%',
+                                        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                        marginBottom: '20px',
+                                    }}
+                                >
+                                    <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Выработка</h3>
+                                    {data.machine?.outputs?.map((output) => (
+                                        <div
+                                            key={output.id}
+                                            style={{
+                                                padding: '12px',
+                                                borderRadius: '8px',
+                                                backgroundColor: '#f9f9f9',
+                                                marginBottom: '12px',
+                                                border: '1px solid #e0e0e0',
+                                                boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div>
+                                                <strong>Количество:</strong> {output.quantity} - {data.machine.unit.name}
+                                            </div>
+                                            <button
+                                                style={{
+                                                    backgroundColor: 'transparent',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    color: '#2196F3',
+                                                }}
+                                                onClick={() => openEditModal(output)}
+                                            >
+                                                <EditIcon style={{ fontSize: '20px' }} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: '10px',
+                                        border: '1px solid #e0e0e0',
+                                        padding: '10px',
+                                        width: '48%',
+                                        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                        marginBottom: '20px',
+                                    }}
+                                >
+                                    <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Простои</h3>
+
+                                    {data.machine?.downtimes
+                                        ?.sort((a, b) => a.id - b.id) // Сортировка по возрастанию id
+                                        .map((downtime) => (
+                                            <div
+                                                key={downtime.id}
+                                                style={{
+                                                    padding: '12px',
+                                                    borderRadius: '8px',
+                                                    backgroundColor: '#f9f9f9',
+                                                    marginBottom: '12px',
+                                                    border: '1px solid #e0e0e0',
+                                                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <div>
+                                                    <strong>Причина:</strong> {downtime.reason.name}<br />
+                                                    <strong>Количество:</strong> {downtime.quantity} ч.
+                                                </div>
+                                                <button
+                                                    style={{
+                                                        backgroundColor: 'transparent',
+                                                        border: 'none',
+                                                        cursor: 'pointer',
+                                                        color: '#2196F3',
+                                                    }}
+                                                    onClick={() => openEditModal(downtime)}
+                                                >
+                                                    <EditIcon style={{ fontSize: '20px' }} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {isEditModalOpen && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1000,
+                    }}
+                >
+                    <div
+                        style={{
+                            backgroundColor: '#fff',
+                            padding: '20px',
+                            borderRadius: '10px',
+                            width: '90%',
+                            maxWidth: '500px',
+                            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+                        }}
+                    >
+                        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>Редактирование данных</h2>
+                        {editRowData.reason ? (
+                            <div>
+                                <div style={{ marginBottom: '15px' }}>
+                                    <label style={{ display: 'block', marginBottom: '8px', color: '#555' }}>
+                                        Количество:
+                                    </label>
+                                    <input
                                         type="number"
-                                        id="productivity"
-                                        label="Выработка"
-                                        {...register("productivity", {
-                                            required: "Введите выработку",
-                                            setValueAs: (value) => (value === "" ? null : Number(value)),
-                                        })}
-                                        error={!!errors.productivity}
-                                        helperText={errors.productivity?.message}
-                                        InputProps={{
-                                            startAdornment: <AssignmentIcon sx={{ mr: 1 }} />,
+                                        value={editRowData.quantity}
+                                        onChange={(e) => setEditRowData({ ...editRowData, process: 'Простой', quantity: e.target.value })}
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            borderRadius: '5px',
+                                            border: '1px solid #ccc',
+                                            fontSize: '1rem',
                                         }}
                                     />
-                                </Grid>
-                            </Grid>
+                                </div>
 
-                            {/* Простои */}
-                            <Grid item xs={12} sx={{ mt: 2, mb: 3 }}>
-                                <Typography component="h2" variant="h6" sx={{ textAlign: 'center', borderBottom: '1px solid black' }}>
-                                    Данные о простое оборудования
-                                </Typography>
-                            </Grid>
+                                <div style={{ marginBottom: '15px' }}>
+                                    <label style={{ display: 'block', marginBottom: '8px', color: '#555' }}>
+                                        Причина:
+                                    </label>
+                                    <TextField
+                                        required
+                                        select
+                                        fullWidth
+                                        label={`Причина простоя ${editRowData.reason.name}`}
+                                        onChange={(e) => setEditRowData({ ...editRowData, process: 'Простой', reason: { ...editRowData.reason, id: e.target.value } })}
+                                    >
+                                        <MenuItem key={'asc848'} value={editRowData.reason.id} disabled>
+                                            {editRowData?.reason?.name} - выбранное значение
+                                        </MenuItem>
+                                        {resone.map((option) => (
+                                            <MenuItem key={option.id} value={option.id}>
+                                                {option.name}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </div>
+                            </div>
 
-                            {downtimes.map((downtime, index) => (
-                                <Grid container spacing={2} key={index} alignItems="center" sx={{ mb: 2 }}>
-                                    <Grid item xs={6}>
-                                        <TextField
-                                            required
-                                            select
-                                            fullWidth
-                                            label={`Причина простоя ${index + 1}`}
-                                            {...register(`downtimes.${index}.reason` as const, { required: "Выберите причину простоя" })}
-                                            error={!!errors?.downtimes?.[index]?.reason}
-                                            helperText={errors?.downtimes?.[index]?.reason?.message}
-                                        >
-                                            {simpleReasons.map((option) => (
-                                                <MenuItem key={option} value={option}>
-                                                    {option}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <TextField
-                                            required
-                                            fullWidth
-                                            type="number"
-                                            label="Время простоя (ч)"
-                                            {...register(`downtimes.${index}.time` as const, { required: "Введите время простоя" })}
-                                            error={!!errors?.downtimes?.[index]?.time}
-                                            helperText={errors?.downtimes?.[index]?.time?.message}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <IconButton color="secondary" onClick={() => removeDowntime(index)} disabled={downtimes.length === 1}>
-                                            <RemoveCircle />
-                                        </IconButton>
-                                        {index === downtimes.length - 1 && (
-                                            <IconButton color="primary" onClick={addDowntime}>
-                                                <AddCircle />
-                                            </IconButton>
-                                        )}
-                                    </Grid>
-                                </Grid>
-                            ))}
+                        )
 
-                            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                                Сохранить данные
-                            </Button>
-                        </Box>
-                    </Box>
-                </Paper>
+                            : (
+                                <div style={{ marginBottom: '15px' }}>
+                                    <label style={{ display: 'block', marginBottom: '8px', color: '#555' }}>
+                                        Количество:
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={editRowData.quantity}
+                                        onChange={(e) => setEditRowData({ ...editRowData, process: 'Выработка', quantity: e.target.value })}
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            borderRadius: '5px',
+                                            border: '1px solid #ccc',
+                                            fontSize: '1rem',
+                                        }}
+                                    />
+                                </div>
 
-                <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}>
-                    <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-                        Данные успешно сохранены!
-                    </Alert>
-                </Snackbar>
-            </Container>
-        </ThemeProvider>
+                            )
+
+                        }
+
+
+                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                            <button
+                                style={{
+                                    backgroundColor: '#4CAF50',
+                                    color: '#fff',
+                                    border: 'none',
+                                    padding: '10px 20px',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    marginRight: '10px',
+                                }}
+                                onClick={saveEditChanges}
+                            >
+                                Сохранить
+                            </button>
+                            <button
+                                style={{
+                                    backgroundColor: '#f44336',
+                                    color: '#fff',
+                                    border: 'none',
+                                    padding: '10px 20px',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => setIsEditModalOpen(false)}
+                            >
+                                Отмена
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {isCrashModalOpen && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1000,
+                    }}
+                >
+                    <div
+                        style={{
+                            backgroundColor: '#fff',
+                            padding: '20px',
+                            borderRadius: '10px',
+                            width: '90%',
+                            maxWidth: '500px',
+                            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+                        }}
+                    >
+                        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>Редактирование данных</h2>
+
+                        <div style={{ marginBottom: '15px' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', color: '#555' }}>
+                                Комментарий:
+                            </label>
+                            <input
+                                type="text"
+                                value={isCrashComment}
+                                onChange={(e) => setIsCrashComment(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '10px',
+                                    borderRadius: '5px',
+                                    border: '1px solid #ccc',
+                                    fontSize: '1rem',
+                                }}
+                            />
+                        </div>
+                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                            <button
+                                style={{
+                                    backgroundColor: '#4CAF50',
+                                    color: '#fff',
+                                    border: 'none',
+                                    padding: '10px 20px',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    marginRight: '10px',
+                                }}
+                                onClick={saveEditChanges2}
+                            >
+                                Сохранить
+                            </button>
+                            <button
+                                style={{
+                                    backgroundColor: '#f44336',
+                                    color: '#fff',
+                                    border: 'none',
+                                    padding: '10px 20px',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => setIsCrashModalOpen(false)}
+                            >
+                                Отмена
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {isNotificationOpen && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        backgroundColor: '#fff',
+                        padding: '20px',
+                        borderRadius: '10px',
+                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+                        zIndex: 1001,
+                    }}
+                >
+                    <h3 style={{ textAlign: 'center', marginBottom: '15px', color: '#333' }}>
+                        Мех служба в курсе?
+                    </h3>
+                    <div style={{ textAlign: 'center' }}>
+                        <button
+                            style={{
+                                backgroundColor: '#4CAF50',
+                                color: '#fff',
+                                border: 'none',
+                                padding: '10px 20px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                marginRight: '10px',
+                            }}
+                            onClick={handleConfirmYes}
+                        >
+                            Да
+                        </button>
+                        <button
+                            style={{
+                                backgroundColor: '#f44336',
+                                color: '#fff',
+                                border: 'none',
+                                padding: '10px 20px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                            }}
+                            onClick={handleConfirmNo}
+                        >
+                            Нет
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {isConfirmNotificationOpen && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        backgroundColor: '#fff',
+                        padding: '20px',
+                        borderRadius: '10px',
+                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+                        zIndex: 1001,
+                    }}
+                >
+                    <h3 style={{ textAlign: 'center', marginBottom: '15px', color: '#333' }}>
+                        Уведоми мастера +7-999-000-00-00
+                    </h3>
+                    <div style={{ textAlign: 'center' }}>
+                        <button
+                            style={{
+                                backgroundColor: '#4CAF50',
+                                color: '#fff',
+                                border: 'none',
+                                padding: '10px 20px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                            }}
+                            onClick={handleConfirmNotificationOk}
+                        >
+                            Хорошо
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
     );
+
 }
