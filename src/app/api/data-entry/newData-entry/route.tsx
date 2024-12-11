@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     try {
         const {editRowData} = await req.json();
+        console.log(editRowData);
+        
 
         if (editRowData.process == 'Выработка') {
            
@@ -30,6 +32,9 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json(updatedQuanti, { status: 200 });
         } else if (editRowData.process == 'Простой'){
             const updatedDowntime = await prisma.putDowntime(editRowData);
+            return NextResponse.json(updatedDowntime, { status: 200 });
+        }else if (editRowData.process == 'ВыработкаМастер'){
+            const updatedDowntime = await prisma.putOutputMaster(editRowData);
             return NextResponse.json(updatedDowntime, { status: 200 });
         }
         // console.log(id);

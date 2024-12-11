@@ -90,6 +90,43 @@ export default class prismaInteraction {
         }
     }
 
+    //   Добавление новых записей мастером
+    async newDataQueryMaster(data: any) {
+        try {
+            // Получаем текущую дату
+            // const newDate = new Date(); // Текущая дата и время
+
+            // Преобразуем quantity в число с плавающей запятой
+            const productQuantity = parseFloat(data.quantity);
+            if (isNaN(productQuantity)) {
+                throw new Error("Некорректное значение quantity для выработки");
+            }
+
+            // Создаем запись для output
+            const requestOutput = await prisma.output.create({
+                data: {
+                    quantity: productQuantity,
+                    date: new Date(data.date).toISOString(),
+                    unit: { connect: { id: data.unitId } },
+                    machine: { connect: { id: data.machineId } },
+                }
+            });
+
+
+            return requestOutput; // Возвращаем созданную запись
+
+
+
+            // Возвращаем как записи output, так и записи downtime
+
+        } catch (error) {
+            console.error('Ошибка при добавлении данных:', error);
+            throw error;
+        } finally {
+            await prisma.$disconnect(); // Закрытие соединения с базой данных
+        }
+    }
+
 
     // Получение данных для Оператора для станка
     async getOperatorsData(requestId: number) {
@@ -97,7 +134,7 @@ export default class prismaInteraction {
             const today = new Date();
             const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
             const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-    
+
             const requestData = await prisma.user.findUnique({
                 where: { id: requestId },
                 select: {
@@ -130,7 +167,7 @@ export default class prismaInteraction {
                     },
                 },
             });
-    
+
             return requestData;
         } catch (error) {
             console.error("Ошибка при получении связанных данных пользователя:", error);
@@ -139,7 +176,48 @@ export default class prismaInteraction {
             await prisma.$disconnect();
         }
     }
-    
+    // Получение данных для мастера
+    async getMasterData(requestId: number, requestUserSector: number) {
+        try {
+            // const today = new Date();
+            // const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            // const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+            // Получаем данные станков для указанного сектора
+            const machines = await prisma.machine.findMany({
+                where: {
+                    sectionId: requestUserSector,
+                },
+                include: {
+                    section: true, // Включаем всю информацию о секции для станков
+                    unit: true,    // Включаем всю информацию о единице измерения
+                    outputs: true,
+                    downtimes: {    // Включаем только сегодняшние простои
+
+                        include: {
+                            reason: true, // Включаем информацию о причине
+                        },
+                    },
+                    status: true,          // Включаем все статусы
+                    statusHistories: {    // Включаем только сегодняшние простои
+
+                        include: {
+                            status: true, // Включаем информацию о причине
+                        },
+                    }, // Включаем историю статусов
+                },
+            });
+
+            return machines;
+        } catch (error) {
+            console.error("Ошибка при получении данных для мастера:", error);
+            throw error;
+        } finally {
+            await prisma.$disconnect();
+        }
+    }
+
+
     // Изменение статуса станка 
     async putStatusStanock(machineId: number, statusId: number, comment?: string) {
         try {
@@ -171,9 +249,19 @@ export default class prismaInteraction {
             if (currentMachine.statusHistories.length > 0) {
                 const lastHistory = currentMachine.statusHistories[0];
     
-                // Проверяем, что новый статус отличается от текущего
-                if (lastHistory.statusId !== statusId) {
-                    // Обновляем дату окончания для последнего статуса
+                // Проверяем, что предыдущий статус имеет заполненную дату окончания
+                if (lastHistory.endDate) {
+                    // Если дата окончания уже есть, создаем новую запись в истории
+                    await prisma.statusHistory.create({
+                        data: {
+                            machineId: machineId,
+                            statusId: statusId,
+                            startDate: new Date(),
+                            comment: comment || null,
+                        },
+                    });
+                } else {
+                    // Если дата окончания не установлена, завершаем текущую запись
                     await prisma.statusHistory.update({
                         where: { id: lastHistory.id },
                         data: {
@@ -181,7 +269,7 @@ export default class prismaInteraction {
                         },
                     });
     
-                    // Создаем новую запись истории с новым статусом
+                    // Создаем новую запись с новым статусом
                     await prisma.statusHistory.create({
                         data: {
                             machineId: machineId,
@@ -213,8 +301,10 @@ export default class prismaInteraction {
     }
     
 
-      // Изменение данных в выработки
-      async putOutput(editRowData) {
+    // Изменение данных в выработки
+    async putOutput(editRowData) {
+        // console.log(editRowData);
+
         try {
             const downtimeQuantity = parseFloat(editRowData.quantity);
             const requestData = await prisma.output.update({
@@ -232,14 +322,36 @@ export default class prismaInteraction {
             await prisma.$disconnect();
         }
     }
-      // Изменение данных в простое
-      async putDowntime(editRowData) {
+     // Изменение данных в выработки мастером
+     async putOutputMaster(editRowData) {
+        console.log(editRowData);
+
+        try {
+            const downtimeQuantity = parseFloat(editRowData.quantity);
+            const requestData = await prisma.output.update({
+                where: { id: editRowData.id },
+                data: {
+                    quantity: downtimeQuantity, // Обновляем значение внешнего ключа напрямую
+                    date: new Date(editRowData.date).toISOString(), // Обновляем значение внешнего ключа напрямую
+                },
+            });
+
+            return requestData;
+        } catch (error) {
+            console.error("Ошибка при получении связанных данных пользователя:", error);
+            throw error;
+        } finally {
+            await prisma.$disconnect();
+        }
+    }
+    // Изменение данных в простое
+    async putDowntime(editRowData) {
         try {
             const downtimeQuantity = parseFloat(editRowData.quantity);
             const requestData = await prisma.downtime.update({
                 where: { id: editRowData.id },
                 data: {
-                    quantity: downtimeQuantity, 
+                    quantity: downtimeQuantity,
                     reason: { connect: { id: editRowData.reason.id } },
                 },
             });

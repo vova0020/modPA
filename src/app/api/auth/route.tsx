@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
         
         // Создаем токен
         const token = jwt.sign(
-            { login: user.login, role: user.role.name, firstName: user.firstName, lastName: user.lastName, id: user.id },
+            { login: user.login, role: user.role.name, section:  user.sectionId, firstName: user.firstName, lastName: user.lastName, id: user.id },
             SECRET_KEY,
             { expiresIn: "1h" } // Устанавливаем срок действия токена
         );

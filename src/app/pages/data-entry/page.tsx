@@ -6,7 +6,7 @@ import Navbar from '@/app/components/navbar';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
-import Findings from '@/app/components/findings'; // Импортируем компонент Findings
+import Findings from '@/app/components/data-entyComponents/findings'; // Импортируем компонент Findings
 import { TextField, MenuItem } from '@mui/material';
 import DangerousIcon from '@mui/icons-material/Dangerous';
 import WarningIcon from '@mui/icons-material/Warning';
