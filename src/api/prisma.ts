@@ -141,23 +141,77 @@ export default class prismaInteraction {
     }
     
     // Изменение статуса станка 
-    async putStatusStanock(machineId: number, statusId: number) {
+    async putStatusStanock(machineId: number, statusId: number, comment?: string) {
         try {
-            const requestData = await prisma.machine.update({
+            // Шаг 1: Получить текущий статус станка
+            const currentMachine = await prisma.machine.findUnique({
                 where: { id: machineId },
-                data: {
-                    statusId: statusId, // Обновляем значение внешнего ключа напрямую
+                include: {
+                    status: true, // Получаем текущий статус
+                    statusHistories: {
+                        orderBy: { startDate: 'desc' }, // Сортируем по дате начала, чтобы получить последний статус
+                        take: 1, // Берем только последнюю запись истории
+                    },
                 },
             });
-
-            return requestData;
+    
+            if (!currentMachine) {
+                throw new Error('Станок не найден');
+            }
+    
+            // Шаг 2: Обновить статус станка
+            const updatedMachine = await prisma.machine.update({
+                where: { id: machineId },
+                data: {
+                    statusId: statusId, // Обновляем статус
+                },
+            });
+    
+            // Шаг 3: Проверить, был ли уже предыдущий статус, и завершить его, если он есть
+            if (currentMachine.statusHistories.length > 0) {
+                const lastHistory = currentMachine.statusHistories[0];
+    
+                // Проверяем, что новый статус отличается от текущего
+                if (lastHistory.statusId !== statusId) {
+                    // Обновляем дату окончания для последнего статуса
+                    await prisma.statusHistory.update({
+                        where: { id: lastHistory.id },
+                        data: {
+                            endDate: new Date(), // Устанавливаем текущую дату как дату окончания
+                        },
+                    });
+    
+                    // Создаем новую запись истории с новым статусом
+                    await prisma.statusHistory.create({
+                        data: {
+                            machineId: machineId,
+                            statusId: statusId,
+                            startDate: new Date(),
+                            comment: comment || null,
+                        },
+                    });
+                }
+            } else {
+                // Если нет записи в истории, создаем первую запись с новым статусом
+                await prisma.statusHistory.create({
+                    data: {
+                        machineId: machineId,
+                        statusId: statusId,
+                        startDate: new Date(),
+                        comment: comment || null,
+                    },
+                });
+            }
+    
+            return updatedMachine;
         } catch (error) {
-            console.error("Ошибка при получении связанных данных пользователя:", error);
+            console.error("Ошибка при обновлении статуса станка:", error);
             throw error;
         } finally {
             await prisma.$disconnect();
         }
     }
+    
 
       // Изменение данных в выработки
       async putOutput(editRowData) {

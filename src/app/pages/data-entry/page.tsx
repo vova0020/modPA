@@ -73,6 +73,7 @@ export default function OperatorsForm() {
         console.log('Данные успешно обновлены автоматом:', response.data);
         fetchRequests(userId);
     }
+    
 
 
 
@@ -134,6 +135,7 @@ export default function OperatorsForm() {
         setIsNotificationOpen(false); // Закрыть уведомление с вопросом
         saveToDatabase(); // Сохранить данные в базу
         setIsConfirmNotificationOpen(false); // Закрыть уведомление о мех службе (если оно открыто)
+        
     };
 
     // Функция для обработки нажатия "Нет" в уведомлении
@@ -141,11 +143,16 @@ export default function OperatorsForm() {
         setIsNotificationOpen(false); // Закрыть уведомление с вопросом
         setIsConfirmNotificationOpen(true); // Показать уведомление о необходимости уведомить мех службу
     };
-
+    async function updateStatus2(machineId: number, statusId: number, isCrashComment:string) {
+        const response = await axios.put('/api/data-entry/putStatusData-entry', { machineId, statusId, isCrashComment });
+        console.log('Данные успешно обновлены автоматом:', response.data);
+        fetchRequests(userId);
+    }
     // Функция для сохранения данных в базу
     const saveToDatabase = () => {
-        updateStatus(data.machine.id, 2)
+        updateStatus2(data.machine.id, 2, isCrashComment)
         console.log("Данные сохранены в базу", isCrashComment);
+        setIsCrashComment('')
         // Здесь добавьте вызов вашей функции для сохранения данных в базу данных
     };
 

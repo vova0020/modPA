@@ -6,12 +6,12 @@ const prisma = new prismaInteraction();
 // GET-запрос для получения данных
 export async function PUT(req: NextRequest) {
     try {
-        const {machineId, statusId} = await req.json();
-        // console.log(id);
+        const {machineId, statusId, isCrashComment} = await req.json();
+        console.log(isCrashComment);
         // console.log(formData);
         
         // Обновляем запись в базе данных с помощью Prisma
-        const updatedStatus = await prisma.putStatusStanock(machineId, statusId);
+        const updatedStatus = await prisma.putStatusStanock(machineId, statusId,isCrashComment);
 
         return NextResponse.json(updatedStatus, { status: 200 });
     } catch (error) {
