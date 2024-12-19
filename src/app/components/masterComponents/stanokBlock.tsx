@@ -1,10 +1,13 @@
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import ModalQuanti from './modalQuanti';
 import ModalResone from './modalResone';
 import axios from 'axios';
+import { ClearIcon } from '@mui/x-date-pickers';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import AlarmOnIcon from '@mui/icons-material/AlarmOn';
 
-export default function StanokBlock({ mashinsData }) {
+export default function StanokBlock({ mashinsData, getData }) {
   const today = new Date();
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
@@ -40,7 +43,8 @@ export default function StanokBlock({ mashinsData }) {
     statusText = 'Станок не выработал продукцию до 21:00';
   } else if (mashinsData.status?.name === 'Сломан') {
     statusColor = '#ff0000';  // красный цвет для карточки
-    statusText = `Станок сломан с ${new Date(mashinsData.statusHistories[mashinsData.statusHistories.length - 1]?.startDate).toLocaleString()} до (не указано)`;
+    statusText = `Станок сломан с ${new Date(mashinsData.statusHistories[mashinsData.statusHistories.length - 1]?.startDate).toLocaleString('ru-RU', { hour12: false, hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+
   } else if (mashinsData.status?.name === 'Работает') {
     statusColor = '#5bea3d';  // зеленый цвет для карточки
     statusText = 'Станок работает';
@@ -53,6 +57,7 @@ export default function StanokBlock({ mashinsData }) {
 
   async function updateStatus(machineId: number, statusId: number) {
     const response = await axios.put('/api/data-entry/putStatusData-entry', { machineId, statusId });
+    getData()
     console.log('Данные успешно обновлены автоматом:', response.data);
   }
 
@@ -69,6 +74,51 @@ export default function StanokBlock({ mashinsData }) {
         color: '#333',
       }}
     >
+      {mashinsData.status?.name === 'Работает' && (
+        <div style={{ width: '100%', display:'flex', flexDirection:'row', justifyContent:'flex-end' }}>
+          <Tooltip title="Остановить работу станка">
+            <Button
+              onClick={() => {
+                updateStatus(mashinsData.id, 3);
+              }}
+              variant="text"
+              // color="secondary"
+              // startIcon={<ClearIcon />}
+              sx={{
+                whiteSpace: 'nowrap',
+                color: '#0068ff'
+              }}
+            >
+              <AlarmOffIcon fontSize='large' />
+            </Button>
+          </Tooltip>
+        </div>
+      )}
+
+      {mashinsData.status?.name === 'Не работает' && (
+        <div style={{ width: '100%', display:'flex', flexDirection:'row', justifyContent:'flex-end' }} >
+          <Tooltip title="Запустить станок в работу">
+            <Button
+              onClick={() => {
+                updateStatus(mashinsData.id, 1);
+              }}
+              variant="text"
+              // color="secondary"
+              // startIcon={<ClearIcon />}
+              sx={{
+                whiteSpace: 'nowrap',
+                color: '#09911e'
+              }}
+            >
+              <AlarmOnIcon fontSize='large' />
+            </Button>
+          </Tooltip>
+        </div>
+      )}
+
+      <div style={{ width: '100%' }}>
+        <h1 style={{ fontSize: '20px', fontWeight: 'bold', margin: '0', textAlign: 'center' }}>{mashinsData.name}</h1>
+      </div>
       <div
         style={{
           display: 'flex',
@@ -84,9 +134,7 @@ export default function StanokBlock({ mashinsData }) {
             Остановки
           </Button>
         </div>
-        <div>
-          <h1 style={{ fontSize: '20px', fontWeight: 'bold', margin: '0' }}>{mashinsData.name}</h1>
-        </div>
+
         <div style={{ fontSize: '14px', color: '#888' }}>
           <Button
             type="submit"

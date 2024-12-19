@@ -49,8 +49,9 @@ export default function OperatorsForm() {
                 const response = await axios.get('/api/data-entry/getData-entry', {
                     params: { userId },
                 });
-                setData(response.data);
-                console.log(response.data);
+                const firstMachine = response.data?.machines?.[0];
+            setData(firstMachine);
+                // console.log(response.data.mashines[0]);
             }
         } catch (error) {
             console.error('Ошибка при загрузке заявок:', error);
@@ -73,7 +74,7 @@ export default function OperatorsForm() {
         console.log('Данные успешно обновлены автоматом:', response.data);
         fetchRequests(userId);
     }
-    
+
 
 
 
@@ -85,7 +86,7 @@ export default function OperatorsForm() {
             try {
                 const response = await axios.get('/api/getResone');
                 setResone(response.data); // Сохраняем данные
-                console.log(response.data);
+                // console.log(response.data);
 
             } catch (error) {
                 console.log(`Ошибка при загрузке данных ${error}`); // Обработка ошибки
@@ -96,6 +97,11 @@ export default function OperatorsForm() {
         fetchData();
 
     }, []);
+    useEffect(() => {
+        console.log(data);
+       
+
+    }, [data]);
 
 
 
@@ -135,7 +141,7 @@ export default function OperatorsForm() {
         setIsNotificationOpen(false); // Закрыть уведомление с вопросом
         saveToDatabase(); // Сохранить данные в базу
         setIsConfirmNotificationOpen(false); // Закрыть уведомление о мех службе (если оно открыто)
-        
+
     };
 
     // Функция для обработки нажатия "Нет" в уведомлении
@@ -143,14 +149,14 @@ export default function OperatorsForm() {
         setIsNotificationOpen(false); // Закрыть уведомление с вопросом
         setIsConfirmNotificationOpen(true); // Показать уведомление о необходимости уведомить мех службу
     };
-    async function updateStatus2(machineId: number, statusId: number, isCrashComment:string) {
+    async function updateStatus2(machineId: number, statusId: number, isCrashComment: string) {
         const response = await axios.put('/api/data-entry/putStatusData-entry', { machineId, statusId, isCrashComment });
         console.log('Данные успешно обновлены автоматом:', response.data);
         fetchRequests(userId);
     }
     // Функция для сохранения данных в базу
     const saveToDatabase = () => {
-        updateStatus2(data.machine.id, 2, isCrashComment)
+        updateStatus2(data.id, 2, isCrashComment)
         console.log("Данные сохранены в базу", isCrashComment);
         setIsCrashComment('')
         // Здесь добавьте вызов вашей функции для сохранения данных в базу данных
@@ -179,9 +185,9 @@ export default function OperatorsForm() {
                         position: 'relative',
                     }}
                 >
-                    <h1 style={{ fontSize: '2.5rem', color: '#333' }}>{data.machine?.name}</h1>
+                    <h1 style={{ fontSize: '2.5rem', color: '#333' }}>{data.name}</h1>
 
-                    {data.machine?.status?.name === 'Не работает' && (
+                    {data.status?.name === 'Не работает' && (
                         <div>
                             <p style={{ fontSize: '1.2rem', color: '#f44336', marginTop: '20px' }}>
                                 Станок не работает
@@ -196,22 +202,22 @@ export default function OperatorsForm() {
                                     cursor: 'pointer',
                                     marginTop: '15px',
                                 }}
-                                onClick={() => updateStatus(data.machine.id, 1)}
+                                onClick={() => updateStatus(data.id, 1)}
                             >
                                 Начать работу
                             </button>
                         </div>
                     )}
-                    {data.machine?.status?.name === 'Сломан' && (
+                    {data.status?.name === 'Сломан' && (
                         <div>
                             <p style={{ fontSize: '1.2rem', color: '#f44336', marginTop: '20px' }}>
-                               {<WarningIcon fontSize='large'/>} Станок сломан. Обратитесь к мастеру!{<WarningIcon fontSize='large'/>}
+                                {<WarningIcon fontSize='large' />} Станок сломан. Обратитесь к мастеру!{<WarningIcon fontSize='large' />}
                             </p>
 
                         </div>
                     )}
 
-                    {data.machine?.status?.name === 'Работает' && (
+                    {data.status?.name === 'Работает' && (
                         <div style={{ marginTop: '30px' }}>
                             <button
                                 style={{
@@ -227,16 +233,12 @@ export default function OperatorsForm() {
                                     display: 'flex',
                                     alignItems: 'center',
                                 }}
-                                onClick={() => updateStatus(data.machine.id, 3)}
+                                onClick={() => updateStatus(data.id, 3)}
                             >
-                                {/* Условный рендеринг для текста и иконки */}
-                                {!isMobile && (
-                                    <span style={{ fontSize: '1rem' }}>Завершить работу</span>
-                                )}
-                                {isMobile && (
-                                    <WorkOffIcon style={{ fontSize: '20px' }} />
-                                )}
+                                {!isMobile && <span style={{ fontSize: '1rem' }}>Завершить работу</span>}
+                                {isMobile && <WorkOffIcon style={{ fontSize: '20px' }} />}
                             </button>
+
                             <button
                                 style={{
                                     position: 'absolute',
@@ -253,86 +255,100 @@ export default function OperatorsForm() {
                                 }}
                                 onClick={() => setIsCrashModalOpen(true)}
                             >
-                                {/* Условный рендеринг для текста и иконки */}
-                                {!isMobile && (
-                                    <span style={{ fontSize: '1rem' }}>Сломался</span>
-                                )}
-                                {isMobile && (
-                                    <DangerousIcon style={{ fontSize: '20px' }} />
-                                )}
+                                {!isMobile && <span style={{ fontSize: '1rem' }}>Сломался</span>}
+                                {isMobile && <DangerousIcon style={{ fontSize: '20px' }} />}
                             </button>
 
                             <h2 style={{ fontSize: '1.8rem', color: '#555' }}>Данные за сегодня</h2>
 
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    marginTop: '20px',
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        borderRadius: '10px',
-                                        border: '1px solid #e0e0e0',
-                                        padding: '10px',
-                                        width: '48%',
-                                        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-                                        marginBottom: '20px',
-                                    }}
-                                >
-                                    <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Выработка</h3>
-                                    {data.machine?.outputs?.map((output) => (
-                                        <div
-                                            key={output.id}
-                                            style={{
-                                                padding: '12px',
-                                                borderRadius: '8px',
-                                                backgroundColor: '#f9f9f9',
-                                                marginBottom: '12px',
-                                                border: '1px solid #e0e0e0',
-                                                boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <div>
-                                                <strong>Количество:</strong> {output.quantity} - {data.machine.unit.name}
-                                            </div>
-                                            <button
-                                                style={{
-                                                    backgroundColor: 'transparent',
-                                                    border: 'none',
-                                                    cursor: 'pointer',
-                                                    color: '#2196F3',
-                                                }}
-                                                onClick={() => openEditModal(output)}
-                                            >
-                                                <EditIcon style={{ fontSize: '20px' }} />
-                                            </button>
-                                        </div>
-                                    ))}
+                            {/* Проверяем, есть ли данные */}
+                            {(!data.outputs?.length && !data.downtimes?.length) ? (
+                                // Если данных нет, показываем кнопку
+                                <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                                    <button
+                                        style={{
+                                            backgroundColor: '#2196F3',
+                                            color: '#fff',
+                                            border: 'none',
+                                            padding: '10px 20px',
+                                            borderRadius: '5px',
+                                            cursor: 'pointer',
+                                        }}
+                                        onClick={() => setIsModalOpen(true)}
+                                    >
+                                        Добавить данные
+                                    </button>
                                 </div>
-
+                            ) : (
+                                // Если данные есть, отображаем блоки
                                 <div
                                     style={{
-                                        backgroundColor: '#fff',
-                                        borderRadius: '10px',
-                                        border: '1px solid #e0e0e0',
-                                        padding: '10px',
-                                        width: '48%',
-                                        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-                                        marginBottom: '20px',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        marginTop: '20px',
+                                        flexDirection: 'row',
                                     }}
                                 >
-                                    <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Простои</h3>
+                                    {/* Блок Выработки */}
+                                    <div
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            borderRadius: '10px',
+                                            border: '1px solid #e0e0e0',
+                                            padding: '10px',
+                                            width: '48%',
+                                            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                            marginBottom: '20px',
+                                        }}
+                                    >
+                                        <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Выработка</h3>
+                                        {data.outputs?.map((output) => (
+                                            <div
+                                                key={output.id}
+                                                style={{
+                                                    padding: '12px',
+                                                    borderRadius: '8px',
+                                                    backgroundColor: '#f9f9f9',
+                                                    marginBottom: '12px',
+                                                    border: '1px solid #e0e0e0',
+                                                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <div>
+                                                    <strong>Количество:</strong> {output.quantity} - {data.unit.name}
+                                                </div>
+                                                <button
+                                                    style={{
+                                                        backgroundColor: 'transparent',
+                                                        border: 'none',
+                                                        cursor: 'pointer',
+                                                        color: '#2196F3',
+                                                    }}
+                                                    onClick={() => openEditModal(output)}
+                                                >
+                                                    <EditIcon style={{ fontSize: '20px' }} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
 
-                                    {data.machine?.downtimes
-                                        ?.sort((a, b) => a.id - b.id) // Сортировка по возрастанию id
-                                        .map((downtime) => (
+                                    {/* Блок Простоев */}
+                                    <div
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            borderRadius: '10px',
+                                            border: '1px solid #e0e0e0',
+                                            padding: '10px',
+                                            width: '48%',
+                                            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                            marginBottom: '20px',
+                                        }}
+                                    >
+                                        <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Простои</h3>
+                                        {data.downtimes?.sort((a, b) => a.id - b.id).map((downtime) => (
                                             <div
                                                 key={downtime.id}
                                                 style={{
@@ -364,10 +380,12 @@ export default function OperatorsForm() {
                                                 </button>
                                             </div>
                                         ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     )}
+
                 </div>
             </div>
 
@@ -658,7 +676,45 @@ export default function OperatorsForm() {
                     </div>
                 </div>
             )}
+
+            {isModalOpen && (
+                <div
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1000,
+                }}
+            >
+                <Findings machine={data} closeModal={()=>setIsModalOpen(false)} getBaza ={()=> fetchRequests(userId)}/>
+            </div>
+            )}
+
         </div>
     );
 
 }
+
+
+{/* <Findings machine={data} closeModal={()=>setIsModalOpen(false)}/> */}
+
+{/* <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1000,
+                    }}
+                ></div> */}

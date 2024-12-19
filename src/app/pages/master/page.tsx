@@ -1,30 +1,15 @@
-'use client'
-import Navbar from '@/app/components/navbar'
-import StanokBlock from '@/app/components/masterComponents/stanokBlock'
+'use client';
+import Navbar from '@/app/components/navbar';
+import StanokBlock from '@/app/components/masterComponents/stanokBlock';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
-import React, { useEffect, useState } from 'react'
-
-
+import {jwtDecode} from 'jwt-decode';
+import React, { useEffect, useState } from 'react';
 
 export default function Master() {
   const [data, setData] = useState([]); // Хранит заявки
   const [token, setToken] = useState<string | null>(null); // Токен пользователя
   const [userId, setUserId] = useState<number | null>(null); // Идентификатор пользователя
-  const [userSector, setUserSector] = useState<number | null>(null); // сектор пользователя
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    handleResize(); // Вызываем один раз при монтировании компонента
-
-    window.addEventListener('resize', handleResize); // Слушаем изменения размера окна
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const [userSector, setUserSector] = useState<number | null>(null); // Сектор пользователя
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -35,7 +20,7 @@ export default function Master() {
         setUserId(decoded.id);
         setUserSector(decoded.section);
       } catch (error) {
-        console.error("Ошибка при декодировании токена:", error);
+        console.error('Ошибка при декодировании токена:', error);
       }
     }
   }, []);
@@ -47,77 +32,52 @@ export default function Master() {
           params: { userId, userSector },
         });
         setData(response.data);
-        console.log(response.data);
       }
     } catch (error) {
       console.error('Ошибка при загрузке заявок:', error);
     }
   };
+
   useEffect(() => {
     fetchRequests(userId, userSector);
     const intervalId = setInterval(() => {
-      fetchRequests(userId, userSector); // Обновляем данные
-    }, 4000); // Обновляем каждые 5 секунд
+      fetchRequests(userId, userSector);
+    }, 4000); // Обновляем каждые 4 секунды
 
-    // Очищаем интервал при размонтировании компонента
     return () => clearInterval(intervalId);
   }, [userId, userSector]);
-
-
 
   return (
     <div>
       <Navbar />
-      <div style={{
-        padding: '10px',
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: '#f9f9f9',
-        flexWrap: 'wrap', // Для возможности переноса элементов на следующую строку
-      }}>
-        {!isMobile && (
-          data
-            .slice() // Создаем копию массива, чтобы не мутировать оригинал
-            .sort((a, b) => a.id - b.id) // Сортируем по возрастанию id
-            .map((mashinsData) => (
-              <div
-                key={mashinsData.id}
-                style={{
-                  width: '30%',         // 30% ширины по умолчанию (для больших экранов)
-                  margin: '10px',       // Отступы между карточками
-                  boxSizing: 'border-box', // Учитываем паддинги в расчете ширины
-                }}
- 
-              >
-                <StanokBlock mashinsData={mashinsData} />
-              </div>
-            ))
-          
-        )}
-        {isMobile && (
-         data
-         .slice() // Создаем копию массива, чтобы не мутировать оригинал
-         .sort((a, b) => a.id - b.id) // Сортируем по возрастанию id
-         .map((mashinsData) => (
-           <div
-             key={mashinsData.id}
-             style={{
-              width: '30%',
-              margin: '0 10px',
-              minWidth: '200px',  // Устанавливаем минимальную ширину
-              flexBasis: '100%',  // Устанавливаем 100% ширины на мобильных устройствах
-            }}
-           >
-             <StanokBlock mashinsData={mashinsData} />
-           </div>
-         ))
-       
-        )}
-        
+      <div
+        style={{
+          padding: '10px',
+          display: 'flex',
+          flexWrap: 'wrap', // Позволяет перенос блоков
+          justifyContent: 'center',
+          gap: '20px', // Пространство между карточками
+          backgroundColor: '#f9f9f9',
+        }}
+      >
+        {data
+          .slice()
+          .sort((a, b) => a.id - b.id)
+          .map((mashinsData) => (
+            <div
+              key={mashinsData.id}
+              style={{
+                flex: '1 1 calc(33.333% - 20px)', // Растягиваем на 1/3 ширины контейнера
+                minWidth: '400x', // Минимальная ширина для предотвращения сужения
+                maxWidth: '450px', // Ограничиваем ширину блоков
+                boxSizing: 'border-box',
+                margin: '0', // Отступы между блоками задаются через gap
+              }}
+            >
+              <StanokBlock mashinsData={mashinsData} getData={()=> fetchRequests(userId, userSector)} />
+            </div>
+          ))}
       </div>
-
-
     </div>
   );
-};
+}

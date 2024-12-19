@@ -18,8 +18,8 @@ model User {
   role      Role?    @relation(fields: [roleId], references: [id])
   sectionId Int? // Внешний ключ для связи с Section
   section   Section? @relation(fields: [sectionId], references: [id])
-  machineId Int? // Внешний ключ для связи с Machine
-  machine   Machine? @relation(fields: [machineId], references: [id])
+
+  machines Machine[] // Один пользователь - много станков
 }
 
 // Модель роли
@@ -49,8 +49,10 @@ model Machine {
   downtimes       Downtime[] // Связь с простоями
   statusId        Int? // Внешний ключ для текущего статуса
   status          Status?         @relation(fields: [statusId], references: [id])
-  users           User[] // Обратная связь с пользователями
   statusHistories StatusHistory[] // Обратная связь с историей статусов
+
+  userId Int? // Внешний ключ для связи с User
+  user      User?    @relation(fields: [userId], references: [id])
 }
 
 // Модель единицы измерения
@@ -76,7 +78,7 @@ model Output {
 model Downtime {
   id        Int             @id @default(autoincrement())
   quantity  Float
-  date DateTime
+  date      DateTime
   machineId Int // Внешний ключ для связи с Machine
   machine   Machine         @relation(fields: [machineId], references: [id])
   reasonId  Int? // Внешний ключ для связи с DowntimeReason
@@ -102,7 +104,7 @@ model Status {
 model StatusHistory {
   id        Int       @id @default(autoincrement())
   machineId Int
-  comment String?
+  comment   String?
   machine   Machine   @relation(fields: [machineId], references: [id])
   statusId  Int
   status    Status    @relation(fields: [statusId], references: [id])

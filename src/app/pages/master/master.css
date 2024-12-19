@@ -1,0 +1,35 @@
+/* Контейнер для карточек */
+.master-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Карточка станка */
+  .master-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(25% - 20px); /* Минимальная ширина карточки 25% */
+    max-width: 400px;
+    min-width: 300px;
+    box-sizing: border-box;
+    padding: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .master-card:hover {
+    transform: translateY(-5px); /* Эффект подъема карточки */
+  }
+  
+  /* Медиа-запрос для мобильных устройств */
+  @media (max-width: 768px) {
+    .master-card {
+      flex: 1 1 100%; /* Полная ширина на мобильных устройствах */
+      margin: 0 auto;
+    }
+  }
+  

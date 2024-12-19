@@ -39,7 +39,9 @@ type FormInputs = {
     downtimes: DowntimeEntry[];
 };
 
-export default function Findings({machine, closeModal}) {
+export default function Findings({machine, closeModal, getBaza}) {
+    // console.log(machine);
+    
     const { register, handleSubmit, watch, formState: { errors }, setValue, reset } = useForm<FormInputs>({
         defaultValues: {
             downtimes: [{ reason: '', time: null }],
@@ -70,6 +72,7 @@ export default function Findings({machine, closeModal}) {
             console.log(response.data); // Обработка ответа от сервера
             // window.location.reload()
             closeModal()
+            getBaza()
         } catch (error) {
             console.error('Ошибка при отправке данных:', error);
         }

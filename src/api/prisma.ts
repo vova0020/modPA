@@ -37,6 +37,8 @@ export default class prismaInteraction {
     //   Добавление новых записей
     async newDataEntry(data: any) {
         try {
+            // console.log(data);
+            
             // Получаем текущую дату
             const newDate = new Date(); // Текущая дата и время
 
@@ -138,7 +140,7 @@ export default class prismaInteraction {
             const requestData = await prisma.user.findUnique({
                 where: { id: requestId },
                 select: {
-                    machine: {
+                    machines: {
                         include: {
                             section: true, // Включаем всю информацию о секции для станков
                             unit: true,    // Включаем всю информацию о единице измерения

@@ -63,6 +63,7 @@ const Navbar: React.FC = () => {
       {role === 'Руководство' && renderLink("/pages/admika", "Админка")} */}
       {renderLink("/pages/data-entry", "Страница оператора")}
       {renderLink("/pages/master", "Страница мастера")}
+      {renderLink("/pages/adminka", "Админка")}
       {/* {renderLink("/pages/createApplications", "Новая форма заявки")} */}
       {role && (
         // @ts-ignore
@@ -121,6 +122,7 @@ const Navbar: React.FC = () => {
                 {role === 'Руководство' && renderLink("/pages/admika", "Админка")} */}
                {renderLink("/pages/data-entry", "Станица оператора")}
                {renderLink("/pages/master", "Страница мастера")}
+               {renderLink("/pages/adminka", "Админка")}
                 {/* {renderLink("/pages/createApplications", "Новая форма заявки")} */}
                 {role && (
                   <Button

@@ -1,9 +1,14 @@
+import { Box, TextField, Tooltip, IconButton } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function ModalQuanti({ data, onClose, mashineId, unitId }) {
     const [editItem, setEditItem] = useState(null);
     const [newItem, setNewItem] = useState({ quantity: '', date: '' });
+    const [filteredData, setFilteredData] = useState(data);
+    const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
 
     const handleEditChange = (field, value) => {
         setEditItem({ ...editItem, process: 'ВыработкаМастер', [field]: value });
@@ -13,28 +18,50 @@ export default function ModalQuanti({ data, onClose, mashineId, unitId }) {
         setNewItem({ ...newItem, [field]: value });
     };
 
+    const handleDateRangeChange = (field, value) => {
+        setDateRange({ ...dateRange, [field]: value });
+    };
+
+    const filterByDateRange = () => {
+        const { startDate, endDate } = dateRange;
+        if (startDate && endDate) {
+            const start = new Date(startDate).setHours(0, 0, 0, 0);
+            const end = new Date(endDate).setHours(23, 59, 59, 999);
+            const filtered = data.filter(item => {
+                const itemDate = new Date(item.date).getTime();
+                return itemDate >= start && itemDate <= end;
+            });
+            setFilteredData(filtered);
+        }
+    };
+
+
     const handleSaveEdit = async () => {
-        // onUpdate(editItem);
-        console.log(editItem);
-        let editRowData = editItem
-        await axios.put('/api/data-entry/newData-entry', { editRowData })
+        let editRowData = editItem;
+        await axios.put('/api/data-entry/newData-entry', { editRowData });
         setEditItem(null);
     };
 
     const handleSaveNew = async () => {
-
         if (newItem.quantity && newItem.date) {
             let requestData = ({ ...newItem, machineId: mashineId, unitId: unitId });
-            console.log(requestData);
             const response = await axios.post('/api/master/postQueryMaster', requestData);
             setNewItem({ quantity: '', date: '' });
         }
     };
-    //   useEffect(()=>{
-    //     console.log(editItem);
-    //     console.log(newItem);
 
-    //   },[editItem,newItem])
+    useEffect(() => {
+        setFilteredData(data);
+    }, [data]);
+
+    useEffect(() => {
+        if (dateRange.startDate || dateRange.endDate) {
+            filterByDateRange();
+        } else {
+            setFilteredData(data);
+        }
+    }, [data]);
+
 
     return (
         <div
@@ -66,12 +93,75 @@ export default function ModalQuanti({ data, onClose, mashineId, unitId }) {
                 }}
                 onClick={(e) => e.stopPropagation()}
             >
-                <h3 style={{ textAlign: 'center', marginBottom: '15px', color: '#333' }}>
+                <h3 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>
                     Выработка
                 </h3>
-                <div style={{ marginBottom: '20px' }}>
-                    {data.slice() // Создаем копию массива, чтобы не мутировать оригинал
-                        .sort((a, b) => a.id - b.id) // Сортируем по возрастанию id
+
+                {/* Фильтр по диапазону дат */}
+                <Box
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                padding: 2,
+                backgroundColor: '#f1f5f9',
+                borderRadius: 2,
+                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+            }}
+        >
+            <Box sx={{ flex: 1 }}>
+                <TextField
+                    label="Начальная дата"
+                    type="date"
+                    value={dateRange.startDate}
+                    onChange={(e) => handleDateRangeChange('startDate', e.target.value)}
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                />
+            </Box>
+            <Box sx={{ flex: 1 }}>
+                <TextField
+                    label="Конечная дата"
+                    type="date"
+                    value={dateRange.endDate}
+                    onChange={(e) => handleDateRangeChange('endDate', e.target.value)}
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                />
+            </Box>
+            <Tooltip title="Применить фильтр">
+                <IconButton
+                    onClick={filterByDateRange}
+                    sx={{
+                        color: 'success.main',
+                        '&:hover': {
+                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        },
+                    }}
+                >
+                    <CheckCircleIcon fontSize="large" />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Сбросить фильтр">
+                <IconButton
+                    onClick={() => setDateRange({ startDate: '', endDate: '' })}
+                    sx={{
+                        color: 'error.main',
+                        '&:hover': {
+                            backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                        },
+                    }}
+                >
+                    <CancelIcon fontSize="large" />
+                </IconButton>
+            </Tooltip>
+        </Box>
+
+
+                {/* Список данных */}
+                <div>
+                    {filteredData.slice()
+                        .sort((a, b) => a.id - b.id)
                         .map((item) => (
                             <div
                                 key={item.id}
@@ -122,33 +212,7 @@ export default function ModalQuanti({ data, onClose, mashineId, unitId }) {
                         ))}
                 </div>
 
-                <div style={{
-                    padding: '15px',
-                    margin: '20px 0',
-                    borderRadius: '5px',
-                    backgroundColor: '#f9f9f9',
-                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                }}>
-                    <h4>Добавить новую запись</h4>
-                    <input
-                        type="number"
-                        value={newItem.quantity}
-                        onChange={(e) => handleNewChange('quantity', e.target.value)}
-                        style={{ marginBottom: '10px', width: '100%' }}
-                        placeholder="Количество"
-                    />
-                    <input
-                        type="datetime-local"
-                        value={newItem.date}
-                        onChange={(e) => handleNewChange('date', e.target.value)}
-                        style={{ marginBottom: '10px', width: '100%' }}
-                        placeholder="Дата"
-                    />
-                    <button onClick={handleSaveNew} style={{ display: 'block', margin: '0 auto' }}>
-                        Сохранить
-                    </button>
-                </div>
-
+                {/* Кнопка закрытия */}
                 <button
                     style={{
                         backgroundColor: '#007BFF',
@@ -158,7 +222,7 @@ export default function ModalQuanti({ data, onClose, mashineId, unitId }) {
                         borderRadius: '5px',
                         cursor: 'pointer',
                         display: 'block',
-                        margin: '0 auto',
+                        margin: '20px auto 0',
                     }}
                     onClick={onClose}
                 >
