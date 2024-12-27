@@ -61,9 +61,9 @@ const Navbar: React.FC = () => {
       {renderLink("/pages/createApplications", "Создание заявки")}
       {role === 'Руководство' && renderLink("/pages/createUsers", "Создание пользователя")}
       {role === 'Руководство' && renderLink("/pages/admika", "Админка")} */}
-      {renderLink("/pages/data-entry", "Страница оператора")}
-      {renderLink("/pages/master", "Страница мастера")}
-      {renderLink("/pages/adminka", "Админка")}
+      {(role === 'Руководство' || role === 'Оператор') && renderLink("/pages/data-entry", "Станица оператора")}
+      {(role === 'Руководство' || role === 'Мастер') && renderLink("/pages/master", "Страница мастера")}
+      {role === 'Руководство' && renderLink("/pages/adminka", "Админка")}
       {/* {renderLink("/pages/createApplications", "Новая форма заявки")} */}
       {role && (
         // @ts-ignore
@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
 
   const renderLink = (href: string, label: string) => (
     <ListItem
-    // @ts-ignore
+      // @ts-ignore
       button
       component={Link}
       href={href}
@@ -120,9 +120,9 @@ const Navbar: React.FC = () => {
                 {renderLink("/pages/createApplications", "Создание заявки")}
                 {role === 'Руководство' && renderLink("/pages/createUsers", "Создание пользователя")}
                 {role === 'Руководство' && renderLink("/pages/admika", "Админка")} */}
-               {renderLink("/pages/data-entry", "Станица оператора")}
-               {renderLink("/pages/master", "Страница мастера")}
-               {renderLink("/pages/adminka", "Админка")}
+                {(role === 'Руководство' || role === 'Оператор') && renderLink("/pages/data-entry", "Станица оператора")}
+                {(role === 'Руководство' || role === 'Мастер') && renderLink("/pages/master", "Страница мастера")}
+                {role === 'Руководство' && renderLink("/pages/adminka", "Админка")}
                 {/* {renderLink("/pages/createApplications", "Новая форма заявки")} */}
                 {role && (
                   <Button

@@ -1,5 +1,6 @@
 'use client';
-
+/* eslint-disable */
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import WorkOffIcon from '@mui/icons-material/WorkOff';
 import Navbar from '@/app/components/navbar';
@@ -50,7 +51,7 @@ export default function OperatorsForm() {
                     params: { userId },
                 });
                 const firstMachine = response.data?.machines?.[0];
-            setData(firstMachine);
+                setData(firstMachine);
                 // console.log(response.data.mashines[0]);
             }
         } catch (error) {
@@ -99,7 +100,7 @@ export default function OperatorsForm() {
     }, []);
     useEffect(() => {
         console.log(data);
-       
+
 
     }, [data]);
 
@@ -156,6 +157,7 @@ export default function OperatorsForm() {
     }
     // Функция для сохранения данных в базу
     const saveToDatabase = () => {
+        // @ts-ignore
         updateStatus2(data.id, 2, isCrashComment)
         console.log("Данные сохранены в базу", isCrashComment);
         setIsCrashComment('')
@@ -185,206 +187,231 @@ export default function OperatorsForm() {
                         position: 'relative',
                     }}
                 >
-                    <h1 style={{ fontSize: '2.5rem', color: '#333' }}>{data.name}</h1>
-
-                    {data.status?.name === 'Не работает' && (
+                    {!data || (Array.isArray(data) && data.length === 0) ? (
                         <div>
-                            <p style={{ fontSize: '1.2rem', color: '#f44336', marginTop: '20px' }}>
-                                Станок не работает
-                            </p>
-                            <button
-                                style={{
-                                    backgroundColor: '#4CAF50',
-                                    color: '#fff',
-                                    border: 'none',
-                                    padding: '10px 20px',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    marginTop: '15px',
-                                }}
-                                onClick={() => updateStatus(data.id, 1)}
-                            >
-                                Начать работу
-                            </button>
-                        </div>
-                    )}
-                    {data.status?.name === 'Сломан' && (
-                        <div>
-                            <p style={{ fontSize: '1.2rem', color: '#f44336', marginTop: '20px' }}>
-                                {<WarningIcon fontSize='large' />} Станок сломан. Обратитесь к мастеру!{<WarningIcon fontSize='large' />}
+                            <p style={{ fontSize: '1.2rem', color: '#e7ba00', marginTop: '20px' }}>
+                                {<WarningIcon fontSize='large' />} Загрузка данных{<WarningIcon fontSize='large' />}
                             </p>
 
                         </div>
-                    )}
-
-                    {data.status?.name === 'Работает' && (
-                        <div style={{ marginTop: '30px' }}>
-                            <button
-                                style={{
-                                    position: 'absolute',
-                                    top: '10px',
-                                    right: '10px',
-                                    backgroundColor: '#d2cc13',
-                                    color: '#fff',
-                                    border: 'none',
-                                    padding: '10px 20px',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                                onClick={() => updateStatus(data.id, 3)}
-                            >
-                                {!isMobile && <span style={{ fontSize: '1rem' }}>Завершить работу</span>}
-                                {isMobile && <WorkOffIcon style={{ fontSize: '20px' }} />}
-                            </button>
-
-                            <button
-                                style={{
-                                    position: 'absolute',
-                                    top: '10px',
-                                    left: '10px',
-                                    backgroundColor: '#f44336',
-                                    color: '#fff',
-                                    border: 'none',
-                                    padding: '10px 20px',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                                onClick={() => setIsCrashModalOpen(true)}
-                            >
-                                {!isMobile && <span style={{ fontSize: '1rem' }}>Сломался</span>}
-                                {isMobile && <DangerousIcon style={{ fontSize: '20px' }} />}
-                            </button>
-
-                            <h2 style={{ fontSize: '1.8rem', color: '#555' }}>Данные за сегодня</h2>
-
-                            {/* Проверяем, есть ли данные */}
-                            {(!data.outputs?.length && !data.downtimes?.length) ? (
-                                // Если данных нет, показываем кнопку
-                                <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    ) : (
+                        <>
+                         {/* @ts-ignore */}
+                            <h1 style={{ fontSize: '2.5rem', color: '#333' }}>{data.name}</h1>
+                            {/* @ts-ignore */}
+                            {data.status?.name === 'Не работает' && (
+                                <div>
+                                    <p style={{ fontSize: '1.2rem', color: '#f44336', marginTop: '20px' }}>
+                                        Станок не работает
+                                    </p>
                                     <button
                                         style={{
-                                            backgroundColor: '#2196F3',
+                                            backgroundColor: '#4CAF50',
                                             color: '#fff',
                                             border: 'none',
                                             padding: '10px 20px',
                                             borderRadius: '5px',
                                             cursor: 'pointer',
+                                            marginTop: '15px',
                                         }}
-                                        onClick={() => setIsModalOpen(true)}
+                                        // @ts-ignore
+                                        onClick={() => updateStatus(data.id, 1)}
                                     >
-                                        Добавить данные
+                                        Начать работу
                                     </button>
                                 </div>
-                            ) : (
-                                // Если данные есть, отображаем блоки
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        marginTop: '20px',
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    {/* Блок Выработки */}
-                                    <div
-                                        style={{
-                                            backgroundColor: '#fff',
-                                            borderRadius: '10px',
-                                            border: '1px solid #e0e0e0',
-                                            padding: '10px',
-                                            width: '48%',
-                                            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-                                            marginBottom: '20px',
-                                        }}
-                                    >
-                                        <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Выработка</h3>
-                                        {data.outputs?.map((output) => (
-                                            <div
-                                                key={output.id}
-                                                style={{
-                                                    padding: '12px',
-                                                    borderRadius: '8px',
-                                                    backgroundColor: '#f9f9f9',
-                                                    marginBottom: '12px',
-                                                    border: '1px solid #e0e0e0',
-                                                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between',
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                <div>
-                                                    <strong>Количество:</strong> {output.quantity} - {data.unit.name}
-                                                </div>
-                                                <button
-                                                    style={{
-                                                        backgroundColor: 'transparent',
-                                                        border: 'none',
-                                                        cursor: 'pointer',
-                                                        color: '#2196F3',
-                                                    }}
-                                                    onClick={() => openEditModal(output)}
-                                                >
-                                                    <EditIcon style={{ fontSize: '20px' }} />
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
+                            )}
+                            {/*  @ts-ignore */}
+                            {data.status?.name === 'Сломан' && (
+                                <div>
+                                    <p style={{ fontSize: '1.2rem', color: '#f44336', marginTop: '20px' }}>
+                                        {<WarningIcon fontSize='large' />} Станок сломан. Обратитесь к мастеру!{<WarningIcon fontSize='large' />}
+                                    </p>
 
-                                    {/* Блок Простоев */}
-                                    <div
-                                        style={{
-                                            backgroundColor: '#fff',
-                                            borderRadius: '10px',
-                                            border: '1px solid #e0e0e0',
-                                            padding: '10px',
-                                            width: '48%',
-                                            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-                                            marginBottom: '20px',
-                                        }}
-                                    >
-                                        <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Простои</h3>
-                                        {data.downtimes?.sort((a, b) => a.id - b.id).map((downtime) => (
-                                            <div
-                                                key={downtime.id}
-                                                style={{
-                                                    padding: '12px',
-                                                    borderRadius: '8px',
-                                                    backgroundColor: '#f9f9f9',
-                                                    marginBottom: '12px',
-                                                    border: '1px solid #e0e0e0',
-                                                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between',
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                <div>
-                                                    <strong>Причина:</strong> {downtime.reason.name}<br />
-                                                    <strong>Количество:</strong> {downtime.quantity} ч.
-                                                </div>
-                                                <button
-                                                    style={{
-                                                        backgroundColor: 'transparent',
-                                                        border: 'none',
-                                                        cursor: 'pointer',
-                                                        color: '#2196F3',
-                                                    }}
-                                                    onClick={() => openEditModal(downtime)}
-                                                >
-                                                    <EditIcon style={{ fontSize: '20px' }} />
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
                                 </div>
                             )}
-                        </div>
-                    )}
+                            {/*  @ts-ignore */}
+                            {data.status?.name === 'Работает' && (
+                                <div style={{ marginTop: '30px' }}>
+                                    <button
+                                        style={{
+                                            position: 'absolute',
+                                            top: '10px',
+                                            right: '10px',
+                                            backgroundColor: '#d2cc13',
+                                            color: '#fff',
+                                            border: 'none',
+                                            padding: '10px 20px',
+                                            borderRadius: '5px',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                        // @ts-ignore 
+                                        onClick={() => updateStatus(data.id, 3)}
+                                    >
+                                        {!isMobile && <span style={{ fontSize: '1rem' }}>Завершить работу</span>}
+                                        {isMobile && <WorkOffIcon style={{ fontSize: '20px' }} />}
+                                    </button>
+
+                                    <button
+                                        style={{
+                                            position: 'absolute',
+                                            top: '10px',
+                                            left: '10px',
+                                            backgroundColor: '#f44336',
+                                            color: '#fff',
+                                            border: 'none',
+                                            padding: '10px 20px',
+                                            borderRadius: '5px',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                        onClick={() => setIsCrashModalOpen(true)}
+                                    >
+                                        {!isMobile && <span style={{ fontSize: '1rem' }}>Сломался</span>}
+                                        {isMobile && <DangerousIcon style={{ fontSize: '20px' }} />}
+                                    </button>
+
+                                    <h2 style={{ fontSize: '1.8rem', color: '#555' }}>Данные за сегодня</h2>
+
+                                    {/* Проверяем, есть ли данные */}
+                                    {/*  @ts-ignore */}
+                                    {(!data.outputs?.length && !data.downtimes?.length) ? (
+                                        // Если данных нет, показываем кнопку
+                                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                                            <button
+                                                style={{
+                                                    backgroundColor: '#2196F3',
+                                                    color: '#fff',
+                                                    border: 'none',
+                                                    padding: '10px 20px',
+                                                    borderRadius: '5px',
+                                                    cursor: 'pointer',
+                                                }}
+                                                onClick={() => setIsModalOpen(true)}
+                                            >
+                                                Добавить данные
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        // Если данные есть, отображаем блоки
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                marginTop: '20px',
+                                                flexDirection: 'row',
+                                            }}
+                                        >
+                                            {/* Блок Выработки */}
+                                            <div
+                                                style={{
+                                                    backgroundColor: '#fff',
+                                                    borderRadius: '10px',
+                                                    border: '1px solid #e0e0e0',
+                                                    padding: '10px',
+                                                    width: '48%',
+                                                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                                    marginBottom: '20px',
+                                                }}
+                                            >
+                                                <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Выработка</h3>
+                                               {/*  @ts-ignore */}
+                                                {data.outputs?.map((output) => (
+                                                    <div
+                                                        key={output.id}
+                                                        style={{
+                                                            padding: '12px',
+                                                            borderRadius: '8px',
+                                                            backgroundColor: '#f9f9f9',
+                                                            marginBottom: '12px',
+                                                            border: '1px solid #e0e0e0',
+                                                            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                                            display: 'flex',
+                                                            justifyContent: 'space-between',
+                                                            alignItems: 'center',
+                                                        }}
+                                                    >
+                                                        
+                                                        <div>
+                                                            {/*  @ts-ignore */}
+                                                            <strong>Количество:</strong> {output.quantity} - {data.unit.name}
+                                                        </div>
+                                                        <button
+                                                            style={{
+                                                                backgroundColor: 'transparent',
+                                                                border: 'none',
+                                                                cursor: 'pointer',
+                                                                color: '#2196F3',
+                                                            }}
+                                                            onClick={() => openEditModal(output)}
+                                                        >
+                                                            <EditIcon style={{ fontSize: '20px' }} />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Блок Простоев */}
+                                            <div
+                                                style={{
+                                                    backgroundColor: '#fff',
+                                                    borderRadius: '10px',
+                                                    border: '1px solid #e0e0e0',
+                                                    padding: '10px',
+                                                    width: '48%',
+                                                    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                                    marginBottom: '20px',
+                                                }}
+                                            >
+                                                <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Простои</h3>
+                                                {/*  @ts-ignore */}
+                                                {data.downtimes?.sort((a, b) => a.id - b.id).map((downtime) => (
+                                                    <div
+                                                        key={downtime.id}
+                                                        style={{
+                                                            padding: '12px',
+                                                            borderRadius: '8px',
+                                                            backgroundColor: '#f9f9f9',
+                                                            marginBottom: '12px',
+                                                            border: '1px solid #e0e0e0',
+                                                            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                                                            display: 'flex',
+                                                            justifyContent: 'space-between',
+                                                            alignItems: 'center',
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <strong>Причина:</strong> {downtime.reason.name}<br />
+                                                            <strong>Количество:</strong> {downtime.quantity} ч.
+                                                        </div>
+                                                        <button
+                                                            style={{
+                                                                backgroundColor: 'transparent',
+                                                                border: 'none',
+                                                                cursor: 'pointer',
+                                                                color: '#2196F3',
+                                                            }}
+                                                            onClick={() => openEditModal(downtime)}
+                                                        >
+                                                            <EditIcon style={{ fontSize: '20px' }} />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                        </>
+
+                    )
+
+                    }
+
 
                 </div>
             </div>
@@ -679,21 +706,21 @@ export default function OperatorsForm() {
 
             {isModalOpen && (
                 <div
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: 1000,
-                }}
-            >
-                <Findings machine={data} closeModal={()=>setIsModalOpen(false)} getBaza ={()=> fetchRequests(userId)}/>
-            </div>
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1000,
+                    }}
+                >
+                    <Findings machine={data} closeModal={() => setIsModalOpen(false)} getBaza={() => fetchRequests(userId)} />
+                </div>
             )}
 
         </div>
@@ -702,7 +729,7 @@ export default function OperatorsForm() {
 }
 
 
-{/* <Findings machine={data} closeModal={()=>setIsModalOpen(false)}/> */}
+{/* <Findings machine={data} closeModal={()=>setIsModalOpen(false)}/> */ }
 
 {/* <div
                     style={{

@@ -49,11 +49,11 @@ export default function Auth() {
 
             // Редиректим на разные страницы в зависимости от роли
             if (decoded.role === 'Руководство') {
+                router.push('/pages/adminka');
+            } else if (decoded.role === 'Оператор') {
                 router.push('/pages/data-entry');
-            // } else if (decoded.role === 'Снабжение') {
-            //     router.push('/pages/starie/procurementPage');
-            // } else if (decoded.role === 'Руководство') {
-            //     router.push('/pages/data-entry');
+            } else if (decoded.role === 'Мастер') {
+                router.push('/pages/master');
             } else {
                 alert("Неизвестная роль");
             }

@@ -1,9 +1,8 @@
 'use client'
-import OperatorsPages from "./pages/operatorsPages/page";
-import OperatorsPage from "./pages/data-entry/page";
+
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import Master from "./pages/master/page";
+
 import Auth from "./pages/auth/page";
 
 export default function Home() {

@@ -36,7 +36,7 @@ type RegisterFormInputs = {
     stanock: number;
 };
  {/* @ts-ignore */}
-const Register: React.FC = ({closeModal}) => {
+const UpdateUser: React.FC = ({closeModal, data}) => {
 
     // const roles = ['Руководство', 'Мастер', 'Пользователь'];
     const [roles, setRoles] = useState([]);
@@ -46,6 +46,8 @@ const Register: React.FC = ({closeModal}) => {
 
     useEffect(() => {
         getData();
+        console.log(data);
+        
     }, []);
 
     const getData = async () => {
@@ -87,7 +89,7 @@ const Register: React.FC = ({closeModal}) => {
             //     sector: 0, // Сбрасываем значение сектора
             // });
             getData()
-            // window.location.reload();
+            window.location.reload();
             closeModal()
         } catch (error: any) {
             console.error("Ошибка при регистрации:", error);
@@ -111,8 +113,9 @@ const Register: React.FC = ({closeModal}) => {
             boxSizing: 'border-box'}}>
             <ArrowBackIcon fontSize='large' onClick={closeModal}/>
            
-                <ThemeProvider theme={theme} >
-                    <Container component="main" maxWidth="xs" >
+       
+                <ThemeProvider theme={theme}>
+                    <Container component="main" maxWidth="xs">
                         <CssBaseline />
                         <Box
                             sx={{
@@ -120,14 +123,13 @@ const Register: React.FC = ({closeModal}) => {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
-                                
                             }}
                         >
                             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                                 <PersonAddIcon />
                             </Avatar>
                             <Typography component="h1" variant="h5">
-                                Регистрация нового пользователя
+                                Редактирование пользователя
                             </Typography>
                             {/* Показываем уведомление, если оно есть */}
                             {notification && (
@@ -281,9 +283,9 @@ const Register: React.FC = ({closeModal}) => {
                         </Box>
                     </Container>
                 </ThemeProvider>
-            
+          
         </div>
 
     );
 }
-export default Register; // Без ограничения по ролям
+export default UpdateUser; // Без ограничения по ролям

@@ -1,4 +1,5 @@
-// components/withAuth.tsx
+ /* eslint-disable */
+// @ts-nocheck// components/withAuth.tsx
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';

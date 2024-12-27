@@ -1,4 +1,6 @@
 'use client';
+/* eslint-disable */
+// @ts-nocheck
 import Navbar from '@/app/components/navbar';
 import StanokBlock from '@/app/components/masterComponents/stanokBlock';
 import axios from 'axios';

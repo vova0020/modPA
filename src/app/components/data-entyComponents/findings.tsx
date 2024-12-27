@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
@@ -39,9 +41,22 @@ type FormInputs = {
     downtimes: DowntimeEntry[];
 };
 
-export default function Findings({machine, closeModal, getBaza}) {
+export default function Findings({ machine, closeModal, getBaza }) {
     // console.log(machine);
-    
+    const [unit, setUnit] = useState([]);
+    useEffect(() => {
+        getSectors();
+    }, []);
+
+    const getSectors = async () => {
+        try {
+            const response = await axios.get('/api/adminka/updateUnit');
+            setUnit(response.data.sort((a: Sector, b: Sector) => a.id - b.id));
+        } catch (error) {
+            // Snackbar('Ошибка загрузки данных.');
+        }
+    };
+
     const { register, handleSubmit, watch, formState: { errors }, setValue, reset } = useForm<FormInputs>({
         defaultValues: {
             downtimes: [{ reason: '', time: null }],
@@ -59,14 +74,14 @@ export default function Findings({machine, closeModal, getBaza}) {
         setOpenSnackbar(true);
         reset(); // Сброс формы
         setFormKey((prevKey) => prevKey + 1);
-       
+
         try {
             // Формируем объект, который будет отправлен на сервер
             const requestData = {
                 ...data,      // Добавляем данные формы
                 machine: machine // Добавляем объект machine
             };
-    
+
             // Выполняем POST запрос с объединенными данными
             const response = await axios.post('/api/data-entry/newData-entry', requestData);
             console.log(response.data); // Обработка ответа от сервера
@@ -96,20 +111,20 @@ export default function Findings({machine, closeModal, getBaza}) {
     useEffect(() => {
         // Создаем асинхронную функцию внутри useEffect
         const fetchData = async () => {
-          try {
-            const response = await axios.get('/api/getResone');
-            setResone(response.data); // Сохраняем данные
-            console.log(response.data);
-            
-          } catch (error) {
-            console.log(`Ошибка при загрузке данных ${error}`); // Обработка ошибки
-          } 
+            try {
+                const response = await axios.get('/api/getResone');
+                setResone(response.data); // Сохраняем данные
+                console.log(response.data);
+
+            } catch (error) {
+                console.log(`Ошибка при загрузке данных ${error}`); // Обработка ошибки
+            }
         };
-    
+
         // Вызываем асинхронную функцию
         fetchData();
-    
-      }, []);
+
+    }, []);
 
     return (
         <div>

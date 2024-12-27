@@ -19,7 +19,8 @@ model User {
   sectionId Int? // Внешний ключ для связи с Section
   section   Section? @relation(fields: [sectionId], references: [id])
 
-  machines Machine[] // Один пользователь - много станков
+  machines       Machine[] // Один пользователь - много станков (основное владение)
+  masterMachines Machine[] @relation("MasterRelation") // Один пользователь - много станков (мастер)
 }
 
 // Модель роли
@@ -38,6 +39,7 @@ model Section {
 }
 
 // Модель станка
+// Модель станка
 model Machine {
   id              Int             @id @default(autoincrement())
   name            String
@@ -45,16 +47,18 @@ model Machine {
   section         Section?        @relation(fields: [sectionId], references: [id])
   unitId          Int? // Внешний ключ для связи с Unit
   unit            Unit?           @relation(fields: [unitId], references: [id])
-  outputs         Output[] // Связь с выработками
-  downtimes       Downtime[] // Связь с простоями
+  outputs         Output[]        // Связь с выработками
+  downtimes       Downtime[]      // Связь с простоями
   statusId        Int? // Внешний ключ для текущего статуса
   status          Status?         @relation(fields: [statusId], references: [id])
   statusHistories StatusHistory[] // Обратная связь с историей статусов
 
-  userId Int? // Внешний ключ для связи с User
-  user      User?    @relation(fields: [userId], references: [id])
-}
+  userId   Int?   // Внешний ключ для связи с User
+  user     User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  masterId Int?   // Внешний ключ для связи с мастером
+  master   User?  @relation("MasterRelation", fields: [masterId], references: [id], onDelete: SetNull)
+}
 // Модель единицы измерения
 model Unit {
   id       Int       @id @default(autoincrement())
@@ -71,7 +75,7 @@ model Output {
   unitId    Int // Внешний ключ для связи с Unit
   unit      Unit     @relation(fields: [unitId], references: [id])
   machineId Int // Внешний ключ для связи с Machine
-  machine   Machine  @relation(fields: [machineId], references: [id])
+  machine   Machine  @relation(fields: [machineId], references: [id], onDelete: Cascade)
 }
 
 // Модель простоя
@@ -80,7 +84,7 @@ model Downtime {
   quantity  Float
   date      DateTime
   machineId Int // Внешний ключ для связи с Machine
-  machine   Machine         @relation(fields: [machineId], references: [id])
+  machine   Machine         @relation(fields: [machineId], references: [id], onDelete: Cascade)
   reasonId  Int? // Внешний ключ для связи с DowntimeReason
   reason    DowntimeReason? @relation(fields: [reasonId], references: [id])
 }
@@ -105,7 +109,7 @@ model StatusHistory {
   id        Int       @id @default(autoincrement())
   machineId Int
   comment   String?
-  machine   Machine   @relation(fields: [machineId], references: [id])
+  machine   Machine   @relation(fields: [machineId], references: [id], onDelete: Cascade)
   statusId  Int
   status    Status    @relation(fields: [statusId], references: [id])
   startDate DateTime
