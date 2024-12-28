@@ -1,6 +1,5 @@
- /* eslint-disable */
-// @ts-nocheck// components/withAuth.tsx
-
+/* eslint-disable */
+// @ts-nocheck
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';

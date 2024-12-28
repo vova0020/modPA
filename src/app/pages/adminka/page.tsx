@@ -1,15 +1,19 @@
-import CreateReasonsDowntime from '@/app/components/adminkaComponents/CreateReasonsDowntime'
-import CreateSecktors from '@/app/components/adminkaComponents/CreateSecktors'
-import CreateStanok from '@/app/components/adminkaComponents/CreateStanok'
-import CreateUnitMeasurement from '@/app/components/adminkaComponents/CreateUnitMeasurement'
-import CreateUsers from '@/app/components/adminkaComponents/CreateUser'
-
-import Navbar from '@/app/components/navbar'
-import React from 'react'
-
+'use client'
+/* eslint-disable */
+// @ts-nocheck
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Container, Grid, Paper, TextField, Typography, Snackbar, Alert, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText } from '@mui/material';
+import withAuth from '@/app/components/withAuth';
+import Navbar from '@/app/components/navbar';
 
 
-export default function Adminka() {
+import CreateReasonsDowntime from '@/app/components/adminkaComponents/CreateReasonsDowntime';
+import CreateSecktors from '@/app/components/adminkaComponents/CreateSecktors';
+import CreateStanok from '@/app/components/adminkaComponents/CreateStanok';
+import CreateUnitMeasurement from '@/app/components/adminkaComponents/CreateUnitMeasurement';
+import CreateUsers from '@/app/components/adminkaComponents/CreateUser';
+
+const AdminPage: React.FC = () => {
     return (
         <div>
             <Navbar />
@@ -56,3 +60,4 @@ export default function Adminka() {
         </div>
     )
 }
+export default withAuth(AdminPage, ['Руководство']);

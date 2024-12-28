@@ -1,14 +1,15 @@
 // pages/unauthorized.tsx
 'use client'
-
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { Container, Typography, Button } from '@mui/material';
-import { redirect } from 'next/navigation';
 
+    
 const UnauthorizedPage: React.FC = () => {
+  const router = useRouter();
   // Логика редиректа, если это необходимо
   const handleGoBack = () => {
-    redirect('/'); // Перенаправление на главную страницу
+    router.push('/pages/auth'); // Перенаправление на главную страницу
   };
 
   return (
@@ -17,7 +18,7 @@ const UnauthorizedPage: React.FC = () => {
         Доступ запрещен
       </Typography>
       <Typography variant="body1" gutterBottom>
-        У вас нет прав для доступа к этой странице. Пожалуйста, обратитесь к администратору.
+        У вас нет прав для доступа к этой странице.
       </Typography>
       <Button variant="contained" color="primary" onClick={handleGoBack}>
         Вернуться на главную
