@@ -886,6 +886,39 @@ export default class prismaInteraction {
 
 
 
+ // Получение списка станков
+ async getMashins() {
+    try {
+        const machines = await prisma.machine.findMany({
+            include: {
+                section: true, // Включаем всю информацию о секции для станков
+                unit: true,    // Включаем всю информацию о единице измерения
+                outputs: true,
+                downtimes: {    // Включаем только сегодняшние простои
 
+                    include: {
+                        reason: true, // Включаем информацию о причине
+                    },
+                },
+                status: true,          // Включаем все статусы
+                statusHistories: {    // Включаем только сегодняшние простои
+
+                    include: {
+                        status: true, // Включаем информацию о причине
+                    },
+                }, // Включаем историю статусов
+            },
+        });
+        // console.log(JSON.stringify(requestData, null, 2));
+
+
+        return machines;
+    } catch (error) {
+        console.error('Ошибка при получении списка участков:', error);
+        throw error;
+    } finally {
+        await prisma.$disconnect();
+    }
+}
 
 }

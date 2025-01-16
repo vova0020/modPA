@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const requestId = searchParams.get("userId");
         const requestUerSector = searchParams.get("userSector");
+        console.log(requestId);
         console.log(requestUerSector);
         
 

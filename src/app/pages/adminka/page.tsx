@@ -15,49 +15,30 @@ import CreateUsers from '@/app/components/adminkaComponents/CreateUser';
 
 const AdminPage: React.FC = () => {
     return (
-        <div>
-            <Navbar />
-            <div style={{ width: '100%', padding: '10px' }}>
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-                    <div style={{ width: '49%', padding:'10px' }}>
-
-                        <div>
-                            <CreateUsers />
-                        </div>
-                    </div>
-                    <div style={{ width: '49%',  boxSizing:'border-box', padding:'10px' }}>
-
-                      
-                        <CreateSecktors />
-                    </div>
-                </div>
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-                    <div style={{ width: '49%', padding:'10px' }}>
-               
-                        <div>
-                            <CreateStanok/>
-                        </div>
-                    </div>
-                    <div style={{ width: '49%',  boxSizing:'border-box', padding:'10px' }}>
-                      
-                        <div>
-                            <CreateUnitMeasurement/>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                  
-                        <div>
-                            <CreateReasonsDowntime/>
-                        </div>
-                    </div>
-                    {/* <div>Создание единиц измерения</div> */}
-                </div>
+        <div style={{ minHeight: '100vh', overflowY: 'auto' }}>
+        <Navbar />
+        <div style={{ width: '100%', padding: '10px' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ width: '49%', padding: '10px' }}>
+              <CreateUsers />
             </div>
-
-
+            <div style={{ width: '49%', boxSizing: 'border-box', padding: '10px' }}>
+              <CreateSecktors />
+            </div>
+          </div>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ width: '49%', padding: '10px' }}>
+              <CreateStanok />
+            </div>
+            <div style={{ width: '49%', boxSizing: 'border-box', padding: '10px' }}>
+              <CreateUnitMeasurement />
+            </div>
+          </div>
+          <div>
+            <CreateReasonsDowntime />
+          </div>
         </div>
+      </div>
     )
 }
 export default withAuth(AdminPage, ['Руководство']);

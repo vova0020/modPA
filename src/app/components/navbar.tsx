@@ -64,6 +64,8 @@ const Navbar: React.FC = () => {
       {(role === 'Руководство' || role === 'Оператор') && renderLink("/pages/data-entry", "Станица оператора")}
       {(role === 'Руководство' || role === 'Мастер') && renderLink("/pages/master", "Страница мастера")}
       {role === 'Руководство' && renderLink("/pages/adminka", "Админка")}
+      {role === 'Руководство' && renderLink("/pages/ceh", "Цех")}
+      {role === 'Руководство' && renderLink("/pages/testov", "Тестовая в 3d")}
       {/* {renderLink("/pages/createApplications", "Новая форма заявки")} */}
       {role && (
         // @ts-ignore
@@ -103,7 +105,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <AppBar position="static" sx={{ backgroundColor: '#fff', color: '#333', boxShadow: 'none', borderRadius: 5 }}>
+      <AppBar position="static" sx={{ backgroundColor: '#fff', color: '#333', boxShadow: 'none', borderRadius: 5,  }}>
         <Toolbar>
           <Typography variant="h6" component="div">
             {/* Логотип или заголовок приложения */}
@@ -123,6 +125,8 @@ const Navbar: React.FC = () => {
                 {(role === 'Руководство' || role === 'Оператор') && renderLink("/pages/data-entry", "Станица оператора")}
                 {(role === 'Руководство' || role === 'Мастер') && renderLink("/pages/master", "Страница мастера")}
                 {role === 'Руководство' && renderLink("/pages/adminka", "Админка")}
+                {role === 'Руководство' && renderLink("/pages/ceh", "Цех")}
+                {role === 'Руководство' && renderLink("/pages/testov", "Тестовая в 3d")}
                 {/* {renderLink("/pages/createApplications", "Новая форма заявки")} */}
                 {role && (
                   <Button
