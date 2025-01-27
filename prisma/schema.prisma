@@ -39,7 +39,6 @@ model Section {
 }
 
 // Модель станка
-// Модель станка
 model Machine {
   id              Int             @id @default(autoincrement())
   name            String

@@ -78,49 +78,63 @@ export default class prismaInteraction {
     //   Добавление новых записей
     async newDataEntry(data: any) {
         try {
-            // console.log(data);
-
             // Получаем текущую дату
             const newDate = new Date(); // Текущая дата и время
-
-            // Преобразуем quantity в число с плавающей запятой
-            const productQuantity = parseFloat(data.productivity);
-            if (isNaN(productQuantity)) {
-                throw new Error("Некорректное значение quantity для выработки");
-            }
-
-            // Создаем запись для output
-            const requestOutput = await prisma.output.create({
-                data: {
-                    quantity: productQuantity,
-                    date: newDate,
-                    unit: { connect: { id: data.machine.unitId } },
-                    machine: { connect: { id: data.machine.id } },
+    
+            let requestOutput = null;
+            let requestDowntime = null;
+    
+            // Если есть данные по выработке, создаем запись для output
+            if (data.productivity !== null && data.productivity !== undefined) {
+                // Преобразуем quantity в число с плавающей запятой
+                const productQuantity = parseFloat(data.productivity);
+                if (isNaN(productQuantity)) {
+                    throw new Error("Некорректное значение quantity для выработки");
                 }
-            });
-
-            // Создаем записи для downtime
-            const requestDowntime = await Promise.all(
-                data.downtimes.map(async (downtime: any) => {
-                    // Преобразуем downtime.time в число с плавающей запятой
-                    const downtimeQuantity = parseFloat(downtime.time);
-                    if (isNaN(downtimeQuantity)) {
-                        throw new Error(`Некорректное значение времени простоя для причины ${downtime.reason}`);
+    
+                // Создаем запись для output
+                requestOutput = await prisma.output.create({
+                    data: {
+                        quantity: productQuantity,
+                        date: newDate,
+                        unit: { connect: { id: data.machine.unitId } },
+                        machine: { connect: { id: data.machine.id } },
                     }
-
-                    const requestDowntime = await prisma.downtime.create({
-                        data: {
-                            quantity: downtimeQuantity, // Количество времени простоя
-                            date: newDate, // Записываем текущую дату
-                            reason: { connect: { id: downtime.reason } }, // Связываем с причиной простоя по ID
-                            machine: { connect: { id: data.machine.id } }, // Связываем с машиной по ID
+                });
+            }
+    
+            // Если есть данные по простоям, создаем записи для downtime
+            if (data.downtimes && data.downtimes.length > 0) {
+                requestDowntime = await Promise.all(
+                    data.downtimes.map(async (downtime: any) => {
+                        // Проверяем, что причина и время простоя заполнены
+                        if (!downtime.reason || downtime.time === null || downtime.time === undefined) {
+                            return null; // Пропускаем, если данные неполные
                         }
-                    });
-                    return requestDowntime; // Возвращаем созданную запись
-                })
-            );
-
-            // Возвращаем как записи output, так и записи downtime
+    
+                        // Преобразуем downtime.time в число с плавающей запятой
+                        const downtimeQuantity = parseFloat(downtime.time);
+                        if (isNaN(downtimeQuantity)) {
+                            throw new Error(`Некорректное значение времени простоя для причины ${downtime.reason}`);
+                        }
+    
+                        // Создаем запись для downtime
+                        return await prisma.downtime.create({
+                            data: {
+                                quantity: downtimeQuantity, // Количество времени простоя
+                                date: newDate, // Записываем текущую дату
+                                reason: { connect: { id: downtime.reason } }, // Связываем с причиной простоя по ID
+                                machine: { connect: { id: data.machine.id } }, // Связываем с машиной по ID
+                            }
+                        });
+                    })
+                );
+    
+                // Фильтруем null значения (если какие-то записи были пропущены)
+                requestDowntime = requestDowntime.filter(entry => entry !== null);
+            }
+    
+            // Возвращаем как записи output, так и записи downtime (если они есть)
             return {
                 output: requestOutput,
                 downtimes: requestDowntime
@@ -132,7 +146,58 @@ export default class prismaInteraction {
             await prisma.$disconnect(); // Закрытие соединения с базой данных
         }
     }
-
+    //   Добавление новых записей о простоях
+    async newDataEntryProstoy(data: any) {
+        console.log(data);
+        
+        try {
+            // Получаем текущую дату
+            const newDate = new Date(); // Текущая дата и время
+    
+            let requestDowntime = null;
+    
+            // Если есть данные по простоям, создаем записи для downtime
+            if (data.downtimes && data.downtimes.length > 0) {
+                requestDowntime = await Promise.all(
+                    data.downtimes.map(async (downtime: any) => {
+                        // Проверяем, что причина и время простоя заполнены
+                        if (!downtime.reasonId) {
+                            return null; // Пропускаем, если данные неполные
+                        }
+    
+                        // Преобразуем downtime.time в число с плавающей запятой
+                        const downtimeQuantity = parseFloat(downtime.quantity);
+                        if (isNaN(downtimeQuantity)) {
+                            throw new Error(`Некорректное значение времени простоя для причины ${downtime.reasonId}`);
+                        }
+    
+                        // Создаем запись для downtime
+                        return await prisma.downtime.create({
+                            data: {
+                                quantity: downtimeQuantity, // Количество времени простоя
+                                date: newDate, // Записываем текущую дату
+                                reason: { connect: { id: downtime.reasonId } }, // Связываем с причиной простоя по ID
+                                machine: { connect: { id: data.machineId } }, // Связываем с машиной по ID
+                            }
+                        });
+                    })
+                );
+    
+                // Фильтруем null значения (если какие-то записи были пропущены)
+                requestDowntime = requestDowntime.filter(entry => entry !== null);
+            }
+    
+            // Возвращаем только записи downtime
+            return {
+                downtimes: requestDowntime
+            };
+        } catch (error) {
+            console.error('Ошибка при добавлении данных:', error);
+            throw error;
+        } finally {
+            await prisma.$disconnect(); // Закрытие соединения с базой данных
+        }
+    }
     //   Добавление новых записей мастером
     async newDataQueryMaster(data: any) {
         try {

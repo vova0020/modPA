@@ -1,6 +1,6 @@
 /* eslint-disable */
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
     Button, CssBaseline, TextField, MenuItem, Grid, Box, Typography,
@@ -37,61 +37,97 @@ type DowntimeEntry = {
 };
 
 type FormInputs = {
-    productivity: number;
+    productivity: number | null;
     downtimes: DowntimeEntry[];
 };
 
 export default function Findings({ machine, closeModal, getBaza }) {
-    // console.log(machine);
     const [unit, setUnit] = useState([]);
+    const [resone, setResone] = useState([]);
+    const [formKey, setFormKey] = useState(0);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         getSectors();
+        fetchResone();
     }, []);
+
+    // Обработчик клика вне модального окна
+    const handleClickOutside = (event: MouseEvent) => {
+        const dropdownElement = document.querySelector('.MuiMenu-paper');
+        if (
+            modalRef.current &&
+            !modalRef.current.contains(event.target as Node) &&
+            !(dropdownElement && dropdownElement.contains(event.target as Node))
+        ) {
+            closeModal(); // Закрываем модальное окно
+        }
+    };
+    
 
     const getSectors = async () => {
         try {
             const response = await axios.get('/api/adminka/updateUnit');
             setUnit(response.data.sort((a: Sector, b: Sector) => a.id - b.id));
         } catch (error) {
-            // Snackbar('Ошибка загрузки данных.');
+            console.error('Ошибка загрузки данных:', error);
+        }
+    };
+
+    const fetchResone = async () => {
+        try {
+            const response = await axios.get('/api/getResone');
+            setResone(response.data);
+        } catch (error) {
+            console.error('Ошибка при загрузке причин простоев:', error);
         }
     };
 
     const { register, handleSubmit, watch, formState: { errors }, setValue, reset } = useForm<FormInputs>({
         defaultValues: {
+            productivity: null,
             downtimes: [{ reason: '', time: null }],
         },
     });
 
-    const [resone, setResone] = useState([]);
-    const [formKey, setFormKey] = useState(0);
-
-    const [openSnackbar, setOpenSnackbar] = useState(false);
     const downtimes = watch("downtimes");
 
     const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-        console.log(data);
-        setOpenSnackbar(true);
-        reset(); // Сброс формы
-        setFormKey((prevKey) => prevKey + 1);
+        const isProductivityFilled = data.productivity !== null && data.productivity !== undefined;
+        const isDowntimeFilled = data.downtimes.some(downtime => downtime.reason && downtime.time !== null);
 
-        try {
-            // Формируем объект, который будет отправлен на сервер
-            const requestData = {
-                ...data,      // Добавляем данные формы
-                machine: machine // Добавляем объект machine
-            };
-
-            // Выполняем POST запрос с объединенными данными
-            const response = await axios.post('/api/data-entry/newData-entry', requestData);
-            console.log(response.data); // Обработка ответа от сервера
-            // window.location.reload()
-            closeModal()
-            getBaza()
-        } catch (error) {
-            console.error('Ошибка при отправке данных:', error);
+        // Проверка, что хотя бы одно поле заполнено
+        if (!isProductivityFilled && !isDowntimeFilled) {
+            setErrorMessage('Заполните хотя бы одно поле: выработку или простои.');
+            return;
         }
 
+        setErrorMessage(null);
+
+        try {
+            const requestData = {
+                ...data,
+                machine: machine
+            };
+
+            // Отправляем данные на сервер
+            const response = await axios.post('/api/data-entry/newData-entry', requestData);
+            console.log(response.data);
+
+            // Закрываем модальное окно только после успешного сохранения
+            closeModal();
+
+            // Обновляем данные
+            getBaza();
+
+            // Показываем уведомление об успешном сохранении
+            setOpenSnackbar(true);
+        } catch (error) {
+            console.error('Ошибка при отправке данных:', error);
+            setErrorMessage('Ошибка при сохранении данных. Попробуйте снова.');
+        }
     };
 
     const handleSnackbarClose = () => {
@@ -107,31 +143,12 @@ export default function Findings({ machine, closeModal, getBaza }) {
         setValue("downtimes", updatedDowntimes);
     };
 
-    // Получение списка причин простоев
-    useEffect(() => {
-        // Создаем асинхронную функцию внутри useEffect
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('/api/getResone');
-                setResone(response.data); // Сохраняем данные
-                console.log(response.data);
-
-            } catch (error) {
-                console.log(`Ошибка при загрузке данных ${error}`); // Обработка ошибки
-            }
-        };
-
-        // Вызываем асинхронную функцию
-        fetchData();
-
-    }, []);
-
     return (
         <div>
             <ThemeProvider theme={theme}>
                 <Container component="main" maxWidth="md" sx={{ mt: 8 }}>
                     <CssBaseline />
-                    <Paper elevation={3} sx={{ p: 4, borderRadius: '16px', backgroundColor: '#ffffff' }}>
+                    <Paper elevation={3} sx={{ p: 4, borderRadius: '16px', backgroundColor: '#ffffff' }} ref={modalRef}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <Fade in>
@@ -152,13 +169,11 @@ export default function Findings({ machine, closeModal, getBaza }) {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TextField
-                                            required
                                             fullWidth
                                             type="number"
                                             id="productivity"
                                             label="Выработка"
                                             {...register("productivity", {
-                                                required: "Введите выработку",
                                                 setValueAs: (value) => (value === "" ? null : Number(value)),
                                             })}
                                             error={!!errors.productivity}
@@ -181,11 +196,10 @@ export default function Findings({ machine, closeModal, getBaza }) {
                                     <Grid container spacing={2} key={index} alignItems="center" sx={{ mb: 2 }}>
                                         <Grid item xs={6}>
                                             <TextField
-                                                required
                                                 select
                                                 fullWidth
                                                 label={`Причина простоя ${index + 1}`}
-                                                {...register(`downtimes.${index}.reason` as const, { required: "Выберите причину простоя" })}
+                                                {...register(`downtimes.${index}.reason` as const)}
                                                 error={!!errors?.downtimes?.[index]?.reason}
                                                 helperText={errors?.downtimes?.[index]?.reason?.message}
                                             >
@@ -198,11 +212,10 @@ export default function Findings({ machine, closeModal, getBaza }) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
-                                                required
                                                 fullWidth
                                                 type="number"
                                                 label="Время простоя (ч)"
-                                                {...register(`downtimes.${index}.time` as const, { required: "Введите время простоя" })}
+                                                {...register(`downtimes.${index}.time` as const)}
                                                 error={!!errors?.downtimes?.[index]?.time}
                                                 helperText={errors?.downtimes?.[index]?.time?.message}
                                             />
@@ -220,6 +233,12 @@ export default function Findings({ machine, closeModal, getBaza }) {
                                     </Grid>
                                 ))}
 
+                                {errorMessage && (
+                                    <Typography color="error" sx={{ mt: 2 }}>
+                                        {errorMessage}
+                                    </Typography>
+                                )}
+
                                 <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                                     Сохранить данные
                                 </Button>
@@ -235,6 +254,5 @@ export default function Findings({ machine, closeModal, getBaza }) {
                 </Container>
             </ThemeProvider>
         </div>
-
     );
 }

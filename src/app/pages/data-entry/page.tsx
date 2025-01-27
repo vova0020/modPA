@@ -11,6 +11,7 @@ import Findings from '@/app/components/data-entyComponents/findings'; // Имп�
 import { TextField, MenuItem } from '@mui/material';
 import DangerousIcon from '@mui/icons-material/Dangerous';
 import WarningIcon from '@mui/icons-material/Warning';
+import AddDowntimeModal from '@/app/components/data-entyComponents/AddDowntimeModal';
 
 export default function OperatorsForm() {
     const [data, setData] = useState([]); // Хранит заявки
@@ -18,6 +19,7 @@ export default function OperatorsForm() {
     const [userId, setUserId] = useState<number | null>(null); // Идентификатор пользователя
     const [isModalOpen, setIsModalOpen] = useState(false); // Управление видимостью модального окна
     const [isMobile, setIsMobile] = useState(false);
+    const [isAddDowntimeModalOpen, setIsAddDowntimeModalOpen] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -196,7 +198,7 @@ export default function OperatorsForm() {
                         </div>
                     ) : (
                         <>
-                         {/* @ts-ignore */}
+                            {/* @ts-ignore */}
                             <h1 style={{ fontSize: '2.5rem', color: '#333' }}>{data.name}</h1>
                             {/* @ts-ignore */}
                             {data.status?.name === 'Не работает' && (
@@ -318,7 +320,7 @@ export default function OperatorsForm() {
                                                 }}
                                             >
                                                 <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Выработка</h3>
-                                               {/*  @ts-ignore */}
+                                                {/*  @ts-ignore */}
                                                 {data.outputs?.map((output) => (
                                                     <div
                                                         key={output.id}
@@ -334,7 +336,7 @@ export default function OperatorsForm() {
                                                             alignItems: 'center',
                                                         }}
                                                     >
-                                                        
+
                                                         <div>
                                                             {/*  @ts-ignore */}
                                                             <strong>Количество:</strong> {output.quantity} - {data.unit.name}
@@ -355,6 +357,7 @@ export default function OperatorsForm() {
                                             </div>
 
                                             {/* Блок Простоев */}
+                                            {/* Блок Простоев */}
                                             <div
                                                 style={{
                                                     backgroundColor: '#fff',
@@ -367,7 +370,7 @@ export default function OperatorsForm() {
                                                 }}
                                             >
                                                 <h3 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Простои</h3>
-                                                {/*  @ts-ignore */}
+                                                {/* @ts-ignore */}
                                                 {data.downtimes?.sort((a, b) => a.id - b.id).map((downtime) => (
                                                     <div
                                                         key={downtime.id}
@@ -400,6 +403,22 @@ export default function OperatorsForm() {
                                                         </button>
                                                     </div>
                                                 ))}
+
+                                                {/* Кнопка для добавления простоя */}
+                                                <button
+                                                    style={{
+                                                        backgroundColor: '#2196F3',
+                                                        color: '#fff',
+                                                        border: 'none',
+                                                        padding: '10px 20px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer',
+                                                        marginTop: '10px',
+                                                    }}
+                                                    onClick={() => setIsAddDowntimeModalOpen(true)}
+                                                >
+                                                    Добавить простой
+                                                </button>
                                             </div>
                                         </div>
                                     )}
@@ -720,6 +739,29 @@ export default function OperatorsForm() {
                     }}
                 >
                     <Findings machine={data} closeModal={() => setIsModalOpen(false)} getBaza={() => fetchRequests(userId)} />
+                </div>
+            )}
+
+            {isAddDowntimeModalOpen && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1000,
+                    }}
+                >
+                    <AddDowntimeModal
+                        machine={data}
+                        closeModal={() => setIsAddDowntimeModalOpen(false)}
+                        getBaza={() => fetchRequests(userId)}
+                    />
                 </div>
             )}
 
