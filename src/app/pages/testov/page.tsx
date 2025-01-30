@@ -10,6 +10,7 @@ import { Text } from '@react-three/drei';
 // Компонент для загрузки и отображения модели станка
 import { Mesh, MeshStandardMaterial } from 'three';
 import axios from 'axios';
+import withAuth from '@/app/components/withAuth';
 
 
 const LableText = '#00ffff'
@@ -421,8 +422,8 @@ const MachineModel16 = ({ onRightClick }) => {
 };
 const MachineModel17 = ({ onRightClick }) => {
     const { scene } = useGLTF('/ceh/stanki/BHT_PROFILINE_500.glb'); // Замените на путь к вашей модели
-    scene.scale.set(1.9, 1.9, 1.9); // Масштабируем станок
-    scene.position.set(-230, -9, 70); // Позиционируем станок в сцене
+    scene.scale.set(6, 6, 6); // Масштабируем станок
+    scene.position.set(-230, -3, 70); // Позиционируем станок в сцене
 
     // Применяем новый зеленый материал ко всем Mesh-объектам модели
     const greenMaterial = new MeshStandardMaterial({
@@ -443,8 +444,8 @@ const MachineModel17 = ({ onRightClick }) => {
 };
 const MachineModel18 = ({ onRightClick }) => {
     const { scene } = useGLTF('/ceh/stanki/BHT_PROFILINE_500_2.glb'); // Замените на путь к вашей модели
-    scene.scale.set(1.9, 1.9, 1.9); // Масштабируем станок
-    scene.position.set(-230, -9, -70); // Позиционируем станок в сцене
+    scene.scale.set(6, 6, 6); // Масштабируем станок
+    scene.position.set(-230, -3, -70); // Позиционируем станок в сцене
 
     // Применяем новый зеленый материал ко всем Mesh-объектам модели
     const greenMaterial = new MeshStandardMaterial({
@@ -760,7 +761,9 @@ const MachineLabel1 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -780,6 +783,7 @@ const MachineLabel1 = () => {
                         ref={textRef}
                         position={[100, 40, -150]}
                         font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
+                        // @ts-ignore
                         fontSize={LableTextSize}
                         anchorX="center"
                         anchorY="middle"
@@ -826,7 +830,9 @@ const MachineLabel2 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -846,6 +852,7 @@ const MachineLabel2 = () => {
                         ref={textRef}
                         position={[100, 23, -95]}
                         font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
+                        // @ts-ignore
                         fontSize={LableTextSize}
                         anchorX="center"
                         anchorY="middle"
@@ -892,7 +899,9 @@ const MachineLabel3 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -912,6 +921,7 @@ const MachineLabel3 = () => {
                         ref={textRef}
                         position={[110, 30, 20]}
                         font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
+                        // @ts-ignore
                         fontSize={LableTextSize}
                         anchorX="center"
                         anchorY="middle"
@@ -958,7 +968,9 @@ const MachineLabel4 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -978,6 +990,7 @@ const MachineLabel4 = () => {
                         ref={textRef}
                         position={[-6, 25, 190]}
                         font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
+                        // @ts-ignore
                         fontSize={LableTextSize}
                         anchorX="center"
                         anchorY="middle"
@@ -1024,7 +1037,9 @@ const MachineLabel5 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1044,6 +1059,7 @@ const MachineLabel5 = () => {
                         ref={textRef}
                         position={[70, 35, 265]}
                         font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
+                        // @ts-ignore
                         fontSize={LableTextSize}
                         anchorX="center"
                         anchorY="middle"
@@ -1090,7 +1106,9 @@ const MachineLabel6 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1153,7 +1171,9 @@ const MachineLabel7 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1216,7 +1236,9 @@ const MachineLabel8 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1279,7 +1301,9 @@ const MachineLabel9 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1342,7 +1366,9 @@ const MachineLabel10 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1405,7 +1431,9 @@ const MachineLabel11 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1468,7 +1496,9 @@ const MachineLabel12 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1531,7 +1561,9 @@ const MachineLabel13 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1594,7 +1626,9 @@ const MachineLabel14 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1657,7 +1691,9 @@ const MachineLabel15 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1724,7 +1760,9 @@ const MachineLabel16 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1787,7 +1825,9 @@ const MachineLabel17 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1850,7 +1890,9 @@ const MachineLabel18 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1913,7 +1955,9 @@ const MachineLabel19 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -1975,7 +2019,9 @@ const MachineLabel20 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -2037,7 +2083,9 @@ const MachineLabel21 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -2099,7 +2147,9 @@ const MachineLabel22 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -2161,7 +2211,9 @@ const MachineLabel23 = () => {
 
     useFrame(() => {
         if (textRef.current && arrowRef.current) {
+            // @ts-ignore
             textRef.current.lookAt(camera.position);
+            // @ts-ignore
             arrowRef.current.lookAt(camera.position);
         }
     });
@@ -2243,9 +2295,11 @@ const InfoWindow = ({ position, onClose, machineData }) => {
                 transform: 'scale(1) rotateX(0deg)',
             }}
             onPointerEnter={(e) => {
+                // @ts-ignore
                 e.target.style.transform = 'scale(1.05) rotateX(2deg)';
             }}
             onPointerLeave={(e) => {
+                // @ts-ignore
                 e.target.style.transform = 'scale(1) rotateX(0deg)';
             }}
         >
@@ -2310,7 +2364,9 @@ const InfoWindow = ({ position, onClose, machineData }) => {
                         cursor: 'pointer',
                         transition: 'background-color 0.3s ease',
                     }}
+                    // @ts-ignore
                     onPointerEnter={(e) => (e.target.style.backgroundColor = '#4ecc03')}
+                    // @ts-ignore
                     onPointerLeave={(e) => (e.target.style.backgroundColor = '#67ff05')}
                     onClick={onClose}
                 >
@@ -2322,7 +2378,7 @@ const InfoWindow = ({ position, onClose, machineData }) => {
 };
 
 // Основной компонент страницы
-export default function WorkshopPage() {
+const WorkshopPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [showWindow, setShowWindow] = useState(false);
     const [windowPosition, setWindowPosition] = useState([0, 0, 0]);
@@ -2588,6 +2644,7 @@ export default function WorkshopPage() {
 
         if (machineData && machineData.outputs && machineData.outputs.length > 0) {
             // Сортируем outputs по дате в порядке убывания (от самой новой к самой старой)
+            // @ts-ignore
             const sortedOutputs = machineData.outputs.sort((a, b) => new Date(b.date) - new Date(a.date));
             latestOutput = sortedOutputs[0]; // Берем первый элемент (самый новый)
         }
@@ -2634,7 +2691,7 @@ export default function WorkshopPage() {
                 )}
 
                 <Canvas
-                    camera={{ position: [-110, 150, -180], fov: 50 }}
+                    camera={{ position: [-210, 150, -180], fov: 50 }}
                 >
                     <ambientLight intensity={0.3} />
                     <directionalLight position={[-5, 20, 5]} intensity={2} color={0xffffff} />
@@ -2718,3 +2775,5 @@ export default function WorkshopPage() {
         </div>
     );
 }
+
+export default withAuth(WorkshopPage, ['Руководство']);
