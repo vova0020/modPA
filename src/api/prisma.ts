@@ -1,4 +1,4 @@
- /* eslint-disable */
+/* eslint-disable */
 
 
 import { PrismaClient } from '@prisma/client';
@@ -80,10 +80,10 @@ export default class prismaInteraction {
         try {
             // Получаем текущую дату
             const newDate = new Date(); // Текущая дата и время
-    
+
             let requestOutput = null;
             let requestDowntime = null;
-    
+
             // Если есть данные по выработке, создаем запись для output
             if (data.productivity !== null && data.productivity !== undefined) {
                 // Преобразуем quantity в число с плавающей запятой
@@ -91,7 +91,7 @@ export default class prismaInteraction {
                 if (isNaN(productQuantity)) {
                     throw new Error("Некорректное значение quantity для выработки");
                 }
-    
+
                 // Создаем запись для output
                 requestOutput = await prisma.output.create({
                     data: {
@@ -102,7 +102,7 @@ export default class prismaInteraction {
                     }
                 });
             }
-    
+
             // Если есть данные по простоям, создаем записи для downtime
             if (data.downtimes && data.downtimes.length > 0) {
                 requestDowntime = await Promise.all(
@@ -111,13 +111,13 @@ export default class prismaInteraction {
                         if (!downtime.reason || downtime.time === null || downtime.time === undefined) {
                             return null; // Пропускаем, если данные неполные
                         }
-    
+
                         // Преобразуем downtime.time в число с плавающей запятой
                         const downtimeQuantity = parseFloat(downtime.time);
                         if (isNaN(downtimeQuantity)) {
                             throw new Error(`Некорректное значение времени простоя для причины ${downtime.reason}`);
                         }
-    
+
                         // Создаем запись для downtime
                         return await prisma.downtime.create({
                             data: {
@@ -129,11 +129,11 @@ export default class prismaInteraction {
                         });
                     })
                 );
-    
+
                 // Фильтруем null значения (если какие-то записи были пропущены)
                 requestDowntime = requestDowntime.filter(entry => entry !== null);
             }
-    
+
             // Возвращаем как записи output, так и записи downtime (если они есть)
             return {
                 output: requestOutput,
@@ -149,13 +149,13 @@ export default class prismaInteraction {
     //   Добавление новых записей о простоях
     async newDataEntryProstoy(data: any) {
         console.log(data);
-        
+
         try {
             // Получаем текущую дату
             const newDate = new Date(); // Текущая дата и время
-    
+
             let requestDowntime = null;
-    
+
             // Если есть данные по простоям, создаем записи для downtime
             if (data.downtimes && data.downtimes.length > 0) {
                 requestDowntime = await Promise.all(
@@ -164,13 +164,13 @@ export default class prismaInteraction {
                         if (!downtime.reasonId) {
                             return null; // Пропускаем, если данные неполные
                         }
-    
+
                         // Преобразуем downtime.time в число с плавающей запятой
                         const downtimeQuantity = parseFloat(downtime.quantity);
                         if (isNaN(downtimeQuantity)) {
                             throw new Error(`Некорректное значение времени простоя для причины ${downtime.reasonId}`);
                         }
-    
+
                         // Создаем запись для downtime
                         return await prisma.downtime.create({
                             data: {
@@ -182,11 +182,11 @@ export default class prismaInteraction {
                         });
                     })
                 );
-    
+
                 // Фильтруем null значения (если какие-то записи были пропущены)
                 requestDowntime = requestDowntime.filter(entry => entry !== null);
             }
-    
+
             // Возвращаем только записи downtime
             return {
                 downtimes: requestDowntime
@@ -201,31 +201,56 @@ export default class prismaInteraction {
     //   Добавление новых записей мастером
     async newDataQueryMaster(data: any) {
         try {
-            // Получаем текущую дату
-            // const newDate = new Date(); // Текущая дата и время
+            console.log(data);
 
-            // Преобразуем quantity в число с плавающей запятой
-            const productQuantity = parseFloat(data.quantity);
-            if (isNaN(productQuantity)) {
-                throw new Error("Некорректное значение quantity для выработки");
+            if (data.mode === 'production') {
+                // Получаем текущую дату
+                // const newDate = new Date(); // Текущая дата и время
+
+                // Преобразуем quantity в число с плавающей запятой
+                const productQuantity = parseFloat(data.quantity);
+                if (isNaN(productQuantity)) {
+                    throw new Error("Некорректное значение quantity для выработки");
+                }
+
+                // Создаем запись для output
+                const requestOutput = await prisma.output.create({
+                    data: {
+                        quantity: productQuantity,
+                        date: new Date(data.date).toISOString(),
+                        unit: { connect: { id: data.unitId } },
+                        machine: { connect: { id: data.machineId } },
+                    }
+                });
+
+
+                return requestOutput; // Возвращаем созданную запись
+
+
+
+                // Возвращаем как записи output, так и записи downtime
+            } else {
+                const productTime = parseFloat(data.time);
+                if (isNaN(productTime)) {
+                    throw new Error("Некорректное значение downtime для выработки");
+                }
+
+
+                // Создаем запись для output
+                const requestOutput = await prisma.downtime.create({
+                    data: {
+                        quantity: productTime,
+                        date: new Date(data.date).toISOString(),
+                        reason: { connect: { id: data.reason } },
+                        machine: { connect: { id: data.machineId } },
+                    }
+                });
+
+
+                return requestOutput; // Возвращаем созданную запись
+
             }
 
-            // Создаем запись для output
-            const requestOutput = await prisma.output.create({
-                data: {
-                    quantity: productQuantity,
-                    date: new Date(data.date).toISOString(),
-                    unit: { connect: { id: data.unitId } },
-                    machine: { connect: { id: data.machineId } },
-                }
-            });
-
-
-            return requestOutput; // Возвращаем созданную запись
-
-
-
-            // Возвращаем как записи output, так и записи downtime
 
         } catch (error) {
             console.error('Ошибка при добавлении данных:', error);
@@ -473,6 +498,45 @@ export default class prismaInteraction {
         }
     }
 
+    // Изменение записей мастером о выработки или простое
+    // Изменение данных в выработки мастером
+    async putDataMaster(editRowData) {
+        console.log(editRowData);
+
+        try {
+            if (editRowData.mode === 'production') {
+                const downtimeQuantity = parseFloat(editRowData.quantity);
+                const requestData = await prisma.output.update({
+                    where: { id: editRowData.id },
+                    data: {
+                        quantity: downtimeQuantity, // Обновляем значение внешнего ключа напрямую
+                        date: new Date(editRowData.date).toISOString(), // Обновляем значение внешнего ключа напрямую
+                    },
+                });
+
+                return requestData;
+            } else {
+                const downtimeQuantity = parseFloat(editRowData.quantity);
+                const requestData = await prisma.downtime.update({
+                    where: { id: editRowData.id },
+                    data: {
+                        quantity: downtimeQuantity, // Обновляем значение внешнего ключа напрямую
+                        date: new Date(editRowData.date).toISOString(), // Обновляем значение внешнего ключа напрямую
+                        reason:{ connect: { id: editRowData.reasonId } },
+                    },
+                });
+
+                return requestData;
+            }
+
+        } catch (error) {
+            console.error("Ошибка при получении связанных данных пользователя:", error);
+            throw error;
+        } finally {
+            await prisma.$disconnect();
+        }
+    }
+
 
     // =========================================================
     // Админка
@@ -488,8 +552,8 @@ export default class prismaInteraction {
                     login: true,
                     role: { select: { id: true, name: true } },   // Выбираем только id и name для роли
                     section: { select: { id: true, name: true } },  // Выбираем только id и name для сектора
-                    machines: { select: { id: true, name: true } } ,
-                    masterMachines: { select: { id: true, name: true } } 
+                    machines: { select: { id: true, name: true } },
+                    masterMachines: { select: { id: true, name: true } }
                 }
             });
             // console.log(JSON.stringify(requestData, null, 2));
@@ -518,7 +582,7 @@ export default class prismaInteraction {
                         masterId: sectorId,
                     },
                 });
-    
+
                 return updatedSectors;
             } else {
                 // Если это одно число, обновляем только один станок
@@ -528,7 +592,7 @@ export default class prismaInteraction {
                         userId: sectorId,
                     },
                 });
-    
+
                 return updatedSector;
             }
         } catch (error) {
@@ -544,7 +608,7 @@ export default class prismaInteraction {
             // Проверяем, является ли data массивом или одним числом
             if (stanock.length > 0) {
                 const stanockIds = stanock.map((item) => item.id); // Получаем массив ID из stanock
-    
+
                 // Убираем связи в userId для машин из массива stanock
                 const updatedSectorsUserId = await prisma.machine.updateMany({
                     where: {
@@ -554,30 +618,30 @@ export default class prismaInteraction {
                         userId: null, // Убираем связи в userId
                     },
                 });
-    
+
                 console.log(`Связи удалены`);
             }
-             // Проверяем, не пуст ли массив stanockMaster
-        if (stanockMaster.length > 0) {
-            const stanockMasterIds = stanockMaster.map((item) => item.id); // Получаем массив ID из stanockMaster
+            // Проверяем, не пуст ли массив stanockMaster
+            if (stanockMaster.length > 0) {
+                const stanockMasterIds = stanockMaster.map((item) => item.id); // Получаем массив ID из stanockMaster
 
-            // Убираем связи в masterId для машин из массива stanockMaster
-            const updatedSectorsMasterId = await prisma.machine.updateMany({
-                where: {
-                    id: { in: stanockMasterIds }, // Фильтруем по массиву id
-                },
-                data: {
-                    masterId: null, // Убираем связи в masterId
-                },
-            });
+                // Убираем связи в masterId для машин из массива stanockMaster
+                const updatedSectorsMasterId = await prisma.machine.updateMany({
+                    where: {
+                        id: { in: stanockMasterIds }, // Фильтруем по массиву id
+                    },
+                    data: {
+                        masterId: null, // Убираем связи в masterId
+                    },
+                });
 
-            console.log(`Связи удалены`);
-        }
+                console.log(`Связи удалены`);
+            }
 
-        return {
-            success: true,
-            message: 'Связи обновлены успешно.',
-        };
+            return {
+                success: true,
+                message: 'Связи обновлены успешно.',
+            };
         } catch (error) {
             console.error("Ошибка при обновлении статуса станка:", error);
             throw error;
@@ -585,7 +649,7 @@ export default class prismaInteraction {
             await prisma.$disconnect();
         }
     }
-    
+
     // Удаление  участка
     async delAdminUsers(sectorId: number) {
         try {
@@ -642,13 +706,13 @@ export default class prismaInteraction {
     }
 
     // Изменение Названия участка
-    async putAdminStanock( sectorId: number, name: string, unitId: number, sectionId:number) {
+    async putAdminStanock(sectorId: number, name: string, unitId: number, sectionId: number) {
         try {
 
             const machineData = {
                 name: name,
                 ...(sectionId && { section: { connect: { id: sectionId } } }),
-                ...(unitId && { unit: { connect: { id:unitId } } }),
+                ...(unitId && { unit: { connect: { id: unitId } } }),
             };
 
             // Шаг 2: Обновить статус станка
@@ -688,9 +752,9 @@ export default class prismaInteraction {
             const requestSectors = await prisma.machine.create({
                 data: {
                     name: data.name,
-                    section: {connect: { id: data.sectionId }},
-                    unit: {connect: { id: data.unitId }},
-                    status: {connect: { id: 3 }}
+                    section: { connect: { id: data.sectionId } },
+                    unit: { connect: { id: data.unitId } },
+                    status: { connect: { id: 3 } }
                 }
             });
 
@@ -951,39 +1015,39 @@ export default class prismaInteraction {
 
 
 
- // Получение списка станков
- async getMashins() {
-    try {
-        const machines = await prisma.machine.findMany({
-            include: {
-                section: true, // Включаем всю информацию о секции для станков
-                unit: true,    // Включаем всю информацию о единице измерения
-                outputs: true,
-                downtimes: {    // Включаем только сегодняшние простои
+    // Получение списка станков
+    async getMashins() {
+        try {
+            const machines = await prisma.machine.findMany({
+                include: {
+                    section: true, // Включаем всю информацию о секции для станков
+                    unit: true,    // Включаем всю информацию о единице измерения
+                    outputs: true,
+                    downtimes: {    // Включаем только сегодняшние простои
 
-                    include: {
-                        reason: true, // Включаем информацию о причине
+                        include: {
+                            reason: true, // Включаем информацию о причине
+                        },
                     },
+                    status: true,          // Включаем все статусы
+                    statusHistories: {    // Включаем только сегодняшние простои
+
+                        include: {
+                            status: true, // Включаем информацию о причине
+                        },
+                    }, // Включаем историю статусов
                 },
-                status: true,          // Включаем все статусы
-                statusHistories: {    // Включаем только сегодняшние простои
-
-                    include: {
-                        status: true, // Включаем информацию о причине
-                    },
-                }, // Включаем историю статусов
-            },
-        });
-        // console.log(JSON.stringify(requestData, null, 2));
+            });
+            // console.log(JSON.stringify(requestData, null, 2));
 
 
-        return machines;
-    } catch (error) {
-        console.error('Ошибка при получении списка участков:', error);
-        throw error;
-    } finally {
-        await prisma.$disconnect();
+            return machines;
+        } catch (error) {
+            console.error('Ошибка при получении списка участков:', error);
+            throw error;
+        } finally {
+            await prisma.$disconnect();
+        }
     }
-}
 
 }

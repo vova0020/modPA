@@ -231,7 +231,8 @@ export default function StanokBlock({ mashinsData, getData }) {
         <ModalQuanti
           unitId={mashinsData.unit}
           mashineId={mashinsData.id}
-          data={mashinsData.outputs}
+          dataOutputs={mashinsData.outputs}
+          dataDowntimes={mashinsData.downtimes}
           onClose={() => setIsQuantiModalOpen(false)}
         />
       )}
