@@ -134,8 +134,8 @@ const MachineModel3 = ({ onRightClick }) => {
 };
 const MachineModel4 = ({ onRightClick }) => {
     const { scene } = useGLTF('/ceh/stanki/Giardina.glb'); // Замените на путь к вашей модели
-    scene.scale.set(9.5, 9.5, 9.5); // Масштабируем станок
-    scene.position.set(-6, -4.5, 180); // Позиционируем станок в сцене
+    scene.scale.set(13, 9.5, 9.5); // Масштабируем станок
+    scene.position.set(-55, -4.5, 180); // Позиционируем станок в сцене
 
     // Применяем новый зеленый материал ко всем Mesh-объектам модели
     const greenMaterial = new MeshStandardMaterial({
@@ -423,7 +423,7 @@ const MachineModel16 = ({ onRightClick }) => {
 const MachineModel17 = ({ onRightClick }) => {
     const { scene } = useGLTF('/ceh/stanki/BHT_PROFILINE_500.glb'); // Замените на путь к вашей модели
     scene.scale.set(6, 6, 6); // Масштабируем станок
-    scene.position.set(-230, -3, 70); // Позиционируем станок в сцене
+    scene.position.set(-230, -4, 70); // Позиционируем станок в сцене
 
     // Применяем новый зеленый материал ко всем Mesh-объектам модели
     const greenMaterial = new MeshStandardMaterial({
@@ -578,7 +578,7 @@ const MachineModel23 = ({ onRightClick }) => {
 const MachineModel24 = ({ onRightClick }) => {
     const { scene } = useGLTF('/ceh/stanki/BIESSE_ROVER_A_FT_2231.glb'); // Замените на путь к вашей модели
     scene.scale.set(2.2, 2.2, 2.2); // Масштабируем станок
-    scene.position.set(-480, -4.5, 10); // Позиционируем станок в сцене
+    scene.position.set(-520, -4.5, 50); // Позиционируем станок в сцене
 
     // Применяем новый зеленый материал ко всем Mesh-объектам модели
     const greenMaterial = new MeshStandardMaterial({
@@ -600,7 +600,7 @@ const MachineModel24 = ({ onRightClick }) => {
 const MachineModel25 = ({ onRightClick }) => {
     const { scene } = useGLTF('/ceh/stanki/WEEKE_VENTURE_2M_2.glb'); // Замените на путь к вашей модели
     scene.scale.set(7, 7, 7); // Масштабируем станок
-    scene.position.set(-500, -4.5, -0); // Позиционируем станок в сцене
+    scene.position.set(-560, -4.5, 50); // Позиционируем станок в сцене
 
     // Применяем новый зеленый материал ко всем Mesh-объектам модели
     const greenMaterial = new MeshStandardMaterial({
@@ -622,7 +622,7 @@ const MachineModel25 = ({ onRightClick }) => {
 const MachineModel26 = ({ onRightClick }) => {
     const { scene } = useGLTF('/ceh/stanki/BIESSE_ROVER_A_FT_2231_2.glb'); // Замените на путь к вашей модели
     scene.scale.set(2.2, 2.2, 2.2); // Масштабируем станок
-    scene.position.set(-450, -4.5, -100); // Позиционируем станок в сцене
+    scene.position.set(-520, -4.5, -40); // Позиционируем станок в сцене
 
     // Применяем новый зеленый материал ко всем Mesh-объектам модели
     const greenMaterial = new MeshStandardMaterial({
@@ -710,7 +710,7 @@ const MachineModel29 = ({ onRightClick }) => {
 const MachineModel30 = ({ onRightClick }) => {
     const { scene } = useGLTF('/ceh/stanki/Heeseman.glb'); // Замените на путь к вашей модели
     scene.scale.set(22, 22, 22); // Масштабируем станок
-    scene.position.set(-485, -4.5, 215); // Позиционируем станок в сцене
+    scene.position.set(-475, -4.5, 215); // Позиционируем станок в сцене
 
     // Применяем новый зеленый материал ко всем Mesh-объектам модели
     const greenMaterial = new MeshStandardMaterial({
@@ -732,7 +732,7 @@ const MachineModel30 = ({ onRightClick }) => {
 const MachineModel31 = ({ onRightClick }) => {
     const { scene } = useGLTF('/ceh/stanki/HOMAG_PAQTEQ_C250.glb'); // Замените на путь к вашей модели
     scene.scale.set(9, 9, 9); // Масштабируем станок
-    scene.position.set(-520, -4.5, 200); // Позиционируем станок в сцене
+    scene.position.set(-590, -0, 235); // Позиционируем станок в сцене
 
     // Применяем новый зеленый материал ко всем Mesh-объектам модели
     const greenMaterial = new MeshStandardMaterial({
@@ -747,1538 +747,259 @@ const MachineModel31 = ({ onRightClick }) => {
         }
     });
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
-    scene.rotation.set(0, Math.PI / -2, 0);
+    scene.rotation.set(0, Math.PI / 2, 0);
+
+    return <primitive object={scene} onContextMenu={onRightClick} />;
+};
+const MachineModel32 = ({ onRightClick }) => {
+    const { scene } = useGLTF('/ceh/stanki/HOMAG_PAQTEQ_C250_2.glb'); // Замените на путь к вашей модели
+    scene.scale.set(9, 9, 9); // Масштабируем станок
+    scene.position.set(-630, -0, 235); // Позиционируем станок в сцене
+
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: HOMAG_PAQTEQ_C250,             // Устанавливаем заданный цвет
+        emissive: HOMAG_PAQTEQ_C250,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
+    });
+
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 2, 0);
 
     return <primitive object={scene} onContextMenu={onRightClick} />;
 };
 
+const MachineModel33 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Pokraska.glb'); // Замените на путь к вашей модели
+    scene.scale.set(20, 18, 18); // Масштабируем станок
+    scene.position.set(-110, -11, 280); // Позиционируем станок в сцене
 
-// Компонент для отображения объемного текста, который всегда будет следовать за камерой
-const MachineLabel1 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
     });
 
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text3D
-                        ref={textRef}
-                        position={[100, 40, -150]}
-                        font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
-                        // @ts-ignore
-                        fontSize={LableTextSize}
-                        anchorX="center"
-                        anchorY="middle"
-                        scale={[4, 4, 4]}
-                    >
-                        HOLZMA_HPP_3503838
-                        <meshStandardMaterial
-                            color={LableText} // Основной цвет (неоново-зеленый)
-                            emissive={LableText} // Цвет свечения
-                            emissiveIntensity={2} // Интенсивность свечения
-                        />
-                    </Text3D>
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 1, 0);
 
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[100, 30, -150]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
+    return <primitive object={scene}  />;
 };
-const MachineLabel2 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
+const MachineModel34 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Press_ORMA_PFL30_13.glb'); // Замените на путь к вашей модели
+    scene.scale.set(12, 10, 10); // Масштабируем станок
+    scene.position.set(-80, -4, 120); // Позиционируем станок в сцене
 
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
     });
 
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text3D
-                        ref={textRef}
-                        position={[100, 23, -95]}
-                        font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
-                        // @ts-ignore
-                        fontSize={LableTextSize}
-                        anchorX="center"
-                        anchorY="middle"
-                        scale={[4, 4, 4]}
-                    >
-                        HOLZMA_HPL_40043412
-                        <meshStandardMaterial
-                            color={LableText} // Основной цвет (неоново-зеленый)
-                            emissive={LableText} // Цвет свечения
-                            emissiveIntensity={2} // Интенсивность свечения
-                        />
-                    </Text3D>
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 1, 0);
 
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[100, 15, -95]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
+    return <primitive object={scene}  />;
 };
-const MachineLabel3 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
+const MachineModel35 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Konveer_Line_Big.glb'); // Замените на путь к вашей модели
+    scene.scale.set(13, 13, 13); // Масштабируем станок
+    scene.position.set(-445, -4, -30); // Позиционируем станок в сцене
 
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
     });
 
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text3D
-                        ref={textRef}
-                        position={[110, 30, 20]}
-                        font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
-                        // @ts-ignore
-                        fontSize={LableTextSize}
-                        anchorX="center"
-                        anchorY="middle"
-                        scale={[4, 4, 4]}
-                    >
-                        HOLZMA_HCL_113822X
-                        <meshStandardMaterial
-                            color={LableText} // Основной цвет (неоново-зеленый)
-                            emissive={LableText} // Цвет свечения
-                            emissiveIntensity={2} // Интенсивность свечения
-                        />
-                    </Text3D>
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 2, 0);
 
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[110, 20, 20]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
+    return <primitive object={scene}  />;
 };
-const MachineLabel4 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
+const MachineModel36 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Shlifovka_sred.glb'); // Замените на путь к вашей модели
+    scene.scale.set(10, 10, 16); // Масштабируем станок
+    scene.position.set(-320, -4, 320) // Позиционируем станок в сцене
 
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
+
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
     });
 
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text3D
-                        ref={textRef}
-                        position={[-6, 25, 190]}
-                        font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
-                        // @ts-ignore
-                        fontSize={LableTextSize}
-                        anchorX="center"
-                        anchorY="middle"
-                        scale={[4, 4, 4]}
-                    >
-                        Giardina
-                        <meshStandardMaterial
-                            color={LableText} // Основной цвет (неоново-зеленый)
-                            emissive={LableText} // Цвет свечения
-                            emissiveIntensity={2} // Интенсивность свечения
-                        />
-                    </Text3D>
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 1, 0);
 
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-6, 15, 190]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
+    return <primitive object={scene}  />;
 };
-const MachineLabel5 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
+const MachineModel37 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Shlifovka_mal.glb'); // Замените на путь к вашей модели
+    scene.scale.set(10, 10, 13); // Масштабируем станок
+    scene.position.set(-320, -4, 170); // Позиционируем станок в сцене
 
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
     });
 
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text3D
-                        ref={textRef}
-                        position={[70, 35, 265]}
-                        font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
-                        // @ts-ignore
-                        fontSize={LableTextSize}
-                        anchorX="center"
-                        anchorY="middle"
-                        scale={[4, 4, 4]}
-                    >
-                        SUPERFICI
-                        <meshStandardMaterial
-                            color={LableText} // Основной цвет (неоново-зеленый)
-                            emissive={LableText} // Цвет свечения
-                            emissiveIntensity={2} // Интенсивность свечения
-                        />
-                    </Text3D>
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 1, 0);
 
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[70, 25, 265]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
+    return <primitive object={scene}  />;
 };
-const MachineLabel6 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
+const MachineModel38 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Shlifovka_big.glb'); // Замените на путь к вашей модели
+    scene.scale.set(12, 11, 14); // Масштабируем станок
+    scene.position.set(-311, -4, 230); // Позиционируем станок в сцене
 
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
     });
 
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-30, 25, 58]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        HOMAG_OPTIMAT_KAL_310
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 1, 0);
 
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-30, 15, 58]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
+    return <primitive object={scene}  />;
 };
-const MachineLabel7 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
+const MachineModel39 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Shlifovka_sred2.glb'); // Замените на путь к вашей модели
+    scene.scale.set(10, 10, 16); // Масштабируем станок
+    scene.position.set(-410, -4, 320) // Позиционируем станок в сцене
 
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
+
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
     });
 
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-30, 35, 15]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        Ima_novimad 1
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 2, 0);
 
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-30, 25, 15]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
+    return <primitive object={scene}  />;
 };
-const MachineLabel8 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
+const MachineModel40 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Skleika.glb'); // Замените на путь к вашей модели
+    scene.scale.set(10, 10, 10); // Масштабируем станок
+    scene.position.set(-510, -4, 160) // Позиционируем станок в сцене
 
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
+
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
     });
 
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-20, 45, -20]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        HOMAG_OPTIMAT_KL_26
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-20, 35, -20]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel9 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
         }
     });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 2, 0);
 
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-20, 28, -60]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        Ima_novimad 2
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-20, 20, -60]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel10 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-20, 35, -100]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        Ima_novimad 3
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-20, 25, -100]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel11 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-20, 45, -150]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        BRANDT_AMBITION_1650
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-20, 35, -150]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel12 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-20, 35, -195]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        Ima_novimad 4
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-20, 25, -195]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel13 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-138, 35, -40]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        KDT-6022_TJ 1
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-138, 25, -40]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel14 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-138, 45, -90]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        KDT-6022_TJ 2
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-138, 35, -90]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel15 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-138, 25, -150]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    // font="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/fonts/helvetiker_regular.typeface.json"
-                    // fontSize={LableTextSize}
-                    // anchorX="center"
-                    // anchorY="middle"
-                    // scale={[4, 4, 4]}
-                    >
-                        BHX_500
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-138, 15, -150]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel16 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-138, 25, 100]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        BST_500
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-138, 15, 100]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel17 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-230, 25, 65]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        BHT_PROFILINE_500 1
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-230, 15, 65]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel18 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-230, 25, -75]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        BHT_PROFILINE_500 2
-
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-230, 15, -75]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel19 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-300, 25, 100]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        Bima400v
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-300, 15, 100]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel20 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-340, 25, 40]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        WEEKE_VENTURE_2M
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-340, 15, 40]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel21 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-340, 35, -3]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        WEEKE_VENTURE_230M
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-340, 25, -3]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel22 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-340, 25, -43]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        BIESSE_ROVER_A_3_30_1
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-340, 15, -43]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
-};
-const MachineLabel23 = () => {
-    const { camera } = useThree();
-    const textRef = useRef();
-    const arrowRef = useRef();
-
-    useFrame(() => {
-        if (textRef.current && arrowRef.current) {
-            // @ts-ignore
-            textRef.current.lookAt(camera.position);
-            // @ts-ignore
-            arrowRef.current.lookAt(camera.position);
-        }
-    });
-
-    return (
-        <Selection>
-            <EffectComposer>
-                <Outline
-                    visibleEdgeColor={0xffffff} // Цвет контура
-                    hiddenEdgeColor={0x000000} // Цвет скрытых краев
-                    blur // Размытие контура
-                    edgeStrength={10} // Интенсивность контура
-                />
-                <group>
-                    {/* Текст */}
-                    <Text
-                        ref={textRef}
-                        position={[-340, 35, -83]}
-                        fontSize={LableTextSize}
-                        color={LableText} // Цвет текста
-                        strokeColor={LableText} // Цвет обводки
-                        strokeWidth={0.1} // Толщина обводки
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        BIESSE_ROVER_A_3_30_2
-                    </Text>
-
-                    {/* Стрелка */}
-                    <group ref={arrowRef} position={[-340, 25, -83]}>
-                        {/* Стержень стрелки */}
-                        <mesh position={[2, 2, 0]}>
-                            <cylinderGeometry args={[0.4, 0.4, 7, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                        {/* Наконечник стрелки */}
-                        <mesh position={[2, -3, 0]} rotation={[Math.PI, 0, 0]}>
-                            <coneGeometry args={[1, 4, 20]} />
-                            <meshStandardMaterial
-                                color={LableText} // Основной цвет (неоново-зеленый)
-                                emissive={LableText} // Цвет свечения
-                                emissiveIntensity={2} // Интенсивность свечения
-                            />
-                        </mesh>
-                    </group>
-                </group>
-            </EffectComposer>
-        </Selection>
-    );
+    return <primitive object={scene}  />;
 };
 
 
 
+const MachineModel41 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Prisadka_1.glb'); // Замените на путь к вашей модели
+    scene.scale.set(9, 9, 9); // Масштабируем станок
+    scene.position.set(-235, -4, -180); // Позиционируем станок в сцене
 
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
+    });
 
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 2, 0);
 
+    return <primitive object={scene}  />;
+};
+const MachineModel42 = () => {
+    const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Prisadka_2.glb'); // Замените на путь к вашей модели
+    scene.scale.set(9, 9, 9); // Масштабируем станок
+    scene.position.set(-250, -4, -185); // Позиционируем станок в сцене
 
+    // Применяем новый зеленый материал ко всем Mesh-объектам модели
+    const greenMaterial = new MeshStandardMaterial({
+        color: prostoi,             // Устанавливаем заданный цвет
+        emissive: prostoi,          // Добавляем эффект свечения
+        emissiveIntensity: 0        // Интенсивность свечения (увеличьте при необходимости)
+    });
 
+    scene.traverse((object) => {
+        if (object instanceof Mesh) {
+            object.material = greenMaterial; // Заменяем материал 
+        }
+    });
+    // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
+    scene.rotation.set(0, Math.PI / 2, 0);
 
-
-
+    return <primitive object={scene}  />;
+};
 
 
 // Компонент для отображения всплывающего окна
@@ -2404,7 +1125,7 @@ const WorkshopPage: React.FC = () => {
     useMemo(() => {
         const intervalId = setInterval(() => {
             getStanock(); // Обновляем данные
-        }, 4000); // Обновляем каждые 5 секунд
+        }, 6000); // Обновляем каждые 5 секунд
 
         // Очищаем интервал при размонтировании компонента
         return () => clearInterval(intervalId);
@@ -2698,32 +1419,8 @@ const WorkshopPage: React.FC = () => {
                     <Suspense fallback={null}>
                         <WorkshopModel />
                         <MachineModel1 onRightClick={() => handleRightClickMachine1('HOLZMA HPP 350/38/38')} />
-                        <MachineLabel1 />
                         <MachineModel2 onRightClick={() => handleRightClickMachine1('HOLZMA HPL 400/43/412 L')} />
-                        <MachineLabel2 />
                         <MachineModel3 onRightClick={() => handleRightClickMachine1('HOLZMA HCL 11/38/22')} />
-                        {/* <MachineLabel3 />
-                        <MachineLabel4 />
-                        <MachineLabel5 />
-                        <MachineLabel6 />
-                        <MachineLabel7 />
-                        <MachineLabel8 />
-                        <MachineLabel9 />
-                        <MachineLabel10 />
-                        <MachineLabel11 />
-                        <MachineLabel12 />
-                        <MachineLabel13 />
-                        <MachineLabel14 />
-                        <MachineLabel15 />
-                        <MachineLabel16 />
-                        <MachineLabel17 />
-                        <MachineLabel18 />
-                        <MachineLabel19 />
-                        <MachineLabel20 />
-                        <MachineLabel21 />
-                        <MachineLabel22 />
-                        <MachineLabel23 /> */}
-
                         <MachineModel4 onRightClick={() => handleRightClickMachine1('Giardina')} />
                         <MachineModel5 onRightClick={() => handleRightClickMachine1('SUPERFICI T311')} />
                         <MachineModel6 onRightClick={() => handleRightClickMachine1('HOMAG KAL 310')} />
@@ -2752,6 +1449,17 @@ const WorkshopPage: React.FC = () => {
                         <MachineModel29 onRightClick={() => handleRightClickMachine1('DMC Mastersand')} />
                         <MachineModel30 onRightClick={() => handleRightClickMachine1('Heeseman')} />
                         <MachineModel31 onRightClick={() => handleRightClickMachine1('HOMAG PAQTEQ C250')} />
+                        <MachineModel32 onRightClick={() => handleRightClickMachine1('HOMAG PAQTEQ C250')} />
+                        <MachineModel33  />
+                        <MachineModel34  />
+                        <MachineModel35  />
+                        <MachineModel36  />
+                        <MachineModel37  />
+                        <MachineModel38  />
+                        <MachineModel39  />
+                        <MachineModel40  />
+                        <MachineModel41  />
+                        <MachineModel42  />
                         {showWindow && (
                             <InfoWindow
                                 position={windowPosition}
