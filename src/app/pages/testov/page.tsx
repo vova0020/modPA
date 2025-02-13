@@ -11,7 +11,7 @@ import { Text } from '@react-three/drei';
 import { Mesh, MeshStandardMaterial } from 'three';
 import axios from 'axios';
 import withAuth from '@/app/components/withAuth';
-
+import * as THREE from 'three';
 
 const LableText = '#00ffff'
 const LableTextSize = 5
@@ -51,6 +51,97 @@ let WEEKE_BST_500 = prostoi;
 let SUPERFICI = prostoi;
 let Giardina = prostoi;
 
+// Кастомные OrbitControls, которые ограничивают пейнинг по вертикали
+const CustomOrbitControls = (props) => {
+    const controlsRef = useRef();
+    // Фиксированное значение для target.y (например, уровень модели)
+    const FIXED_TARGET_Y = 0;
+    // Флаг, что сейчас активно панорамирование (правой кнопкой)
+    const panActive = useRef(false);
+    // Сохраним изначальное вертикальное смещение камеры относительно target при старте панорамирования
+    const initialPanYOffset = useRef(null);
+
+    useEffect(() => {
+        const controls = controlsRef.current;
+        if (!controls) return;
+
+        // Устанавливаем up-ориентацию камеры, чтобы «горизонтальная плоскость» соответствовала y=0
+        // @ts-ignore
+        controls.object.up.set(0, 1, 0);
+
+        // При старте (onStart) и окончании (onEnd) движения обновляем флаг
+        const onStart = () => {
+            // 2 соответствует состоянию панорамирования (PAN)
+              // @ts-ignore
+            if (controls.state === 2) {
+                panActive.current = true;
+                // Сохраняем вертикальный сдвиг между камерой и целью
+                  // @ts-ignore
+                initialPanYOffset.current = controls.object.position.y - controls.target.y;
+            }
+        };
+
+        const onEnd = () => {
+            panActive.current = false;
+            initialPanYOffset.current = null;
+        };
+
+          // @ts-ignore
+        controls.addEventListener('start', onStart);
+          // @ts-ignore
+        controls.addEventListener('end', onEnd);
+
+        return () => {
+              // @ts-ignore
+            controls.removeEventListener('start', onStart);
+              // @ts-ignore
+            controls.removeEventListener('end', onEnd);
+        };
+    }, []);
+
+    
+// внутри компонента CustomOrbitControls:
+
+const PAN_LIMIT = 370; // максимальное расстояние от центра для target
+// Центр, относительно которого ограничиваем панорамирование (например, положение макета)
+const center = new THREE.Vector3(-210.9559902726004, FIXED_TARGET_Y, -55.106477432976256);
+
+useFrame(() => {
+  const controls = controlsRef.current;
+  if (controls) {
+    // Если идёт панорамирование, фиксируем vertical (Y) координату target
+    if (panActive.current) {
+          // @ts-ignore
+      controls.target.y = FIXED_TARGET_Y;
+      if (initialPanYOffset.current !== null) {
+          // @ts-ignore
+        controls.object.position.y = FIXED_TARGET_Y + initialPanYOffset.current;
+      }
+    }
+    
+    // Ограничиваем горизонтальное перемещение target
+    // Вычисляем смещение от центра (игнорируя Y)
+    const offset = new THREE.Vector3(
+          // @ts-ignore
+      controls.target.x - center.x,
+      0,
+        // @ts-ignore
+      controls.target.z - center.z
+    );
+    
+    // Если расстояние больше допустимого, ограничиваем его
+    if (offset.length() > PAN_LIMIT) {
+      offset.setLength(PAN_LIMIT);
+        // @ts-ignore
+      controls.target.x = center.x + offset.x;
+        // @ts-ignore
+      controls.target.z = center.z + offset.z;
+    }
+  }
+});
+
+    return <OrbitControls ref={controlsRef} {...props} />;
+};
 
 
 
@@ -794,7 +885,7 @@ const MachineModel33 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 1, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
 const MachineModel34 = () => {
     const { scene } = useGLTF('/ceh/stanki/Press_ORMA_PFL30_13.glb'); // Замените на путь к вашей модели
@@ -816,7 +907,7 @@ const MachineModel34 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 1, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
 const MachineModel35 = () => {
     const { scene } = useGLTF('/ceh/stanki/Konveer_Line_Big.glb'); // Замените на путь к вашей модели
@@ -838,7 +929,7 @@ const MachineModel35 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 2, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
 const MachineModel36 = () => {
     const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Shlifovka_sred.glb'); // Замените на путь к вашей модели
@@ -861,7 +952,7 @@ const MachineModel36 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 1, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
 const MachineModel37 = () => {
     const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Shlifovka_mal.glb'); // Замените на путь к вашей модели
@@ -883,7 +974,7 @@ const MachineModel37 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 1, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
 const MachineModel38 = () => {
     const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Shlifovka_big.glb'); // Замените на путь к вашей модели
@@ -905,7 +996,7 @@ const MachineModel38 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 1, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
 const MachineModel39 = () => {
     const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Shlifovka_sred2.glb'); // Замените на путь к вашей модели
@@ -928,7 +1019,7 @@ const MachineModel39 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 2, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
 const MachineModel40 = () => {
     const { scene } = useGLTF('/ceh/stanki/Skleika.glb'); // Замените на путь к вашей модели
@@ -951,11 +1042,8 @@ const MachineModel40 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 2, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
-
-
-
 const MachineModel41 = () => {
     const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Prisadka_1.glb'); // Замените на путь к вашей модели
     scene.scale.set(9, 9, 9); // Масштабируем станок
@@ -976,7 +1064,7 @@ const MachineModel41 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 2, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
 const MachineModel42 = () => {
     const { scene } = useGLTF('/ceh/stanki/Ruchnaya_Prisadka_2.glb'); // Замените на путь к вашей модели
@@ -998,7 +1086,7 @@ const MachineModel42 = () => {
     // Повернуть объект на 90 градусов по оси Y (по часовой стрелке)
     scene.rotation.set(0, Math.PI / 2, 0);
 
-    return <primitive object={scene}  />;
+    return <primitive object={scene} />;
 };
 
 
@@ -1412,8 +1500,11 @@ const WorkshopPage: React.FC = () => {
                 )}
 
                 <Canvas
-                    camera={{ position: [-210, 150, -180], fov: 50 }}
-                >
+                     camera={{ 
+                        position: [-211.70219360866412, 282.84271247461885, -337.94820557891506], 
+                        fov: 50 
+                      }}
+                    >
                     <ambientLight intensity={0.3} />
                     <directionalLight position={[-5, 20, 5]} intensity={2} color={0xffffff} />
                     <Suspense fallback={null}>
@@ -1450,16 +1541,16 @@ const WorkshopPage: React.FC = () => {
                         <MachineModel30 onRightClick={() => handleRightClickMachine1('Heeseman')} />
                         <MachineModel31 onRightClick={() => handleRightClickMachine1('HOMAG PAQTEQ C250')} />
                         <MachineModel32 onRightClick={() => handleRightClickMachine1('HOMAG PAQTEQ C250')} />
-                        <MachineModel33  />
-                        <MachineModel34  />
-                        <MachineModel35  />
-                        <MachineModel36  />
-                        <MachineModel37  />
-                        <MachineModel38  />
-                        <MachineModel39  />
-                        <MachineModel40  />
-                        <MachineModel41  />
-                        <MachineModel42  />
+                        <MachineModel33 />
+                        <MachineModel34 />
+                        <MachineModel35 />
+                        <MachineModel36 />
+                        <MachineModel37 />
+                        <MachineModel38 />
+                        <MachineModel39 />
+                        <MachineModel40 />
+                        <MachineModel41 />
+                        <MachineModel42 />
                         {showWindow && (
                             <InfoWindow
                                 position={windowPosition}
@@ -1469,14 +1560,18 @@ const WorkshopPage: React.FC = () => {
                         )}
 
                     </Suspense>
-                    <CameraControls
-                        // maxDistance={200}  // Максимальная дистанция от камеры
-                        // minDistance={1}    // Минимальная дистанция от камеры
-                        dollySpeed={2}     // Скорость изменения масштаба
-                        // @ts-ignore
-                        panSpeed={35}       // Скорость перемещения камеры
-                        dampingFactor={0.1} // "Сглаживание" движения
-                        infinityDolly={false} // Возможность бесконечного изменения масштаба
+                    <CustomOrbitControls
+                        enablePan={true}
+                        enableZoom={true}
+                        // screenSpacePanning false – панорамирование происходит в плоскости, перпендикулярной (0,1,0)
+                        screenSpacePanning={false}
+                        minDistance={80}
+                        maxDistance={400}
+                        minPolarAngle={Math.PI / 4}
+                        maxPolarAngle={80 * (Math.PI / 180)}
+                        enableDamping={true}
+                        dampingFactor={0.1}
+                        target={[-210.9559902726004, -8.824367180550544, -55.106477432976256]}
                     />
                 </Canvas>
             </div>
