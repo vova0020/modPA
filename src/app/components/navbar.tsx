@@ -64,6 +64,7 @@ const Navbar: React.FC = () => {
       {(role === 'Руководство' || role === 'Оператор') && renderLink("/pages/data-entry", "Станица оператора")}
       {(role === 'Руководство' || role === 'Мастер') && renderLink("/pages/master", "Страница мастера")}
       {role === 'Руководство' && renderLink("/pages/adminka", "Админка")}
+      {role === 'Руководство' && renderLink("/pages/managerPages", "Страница руководителя")}
       {/* {role === 'Руководство' && renderLink("/pages/ceh", "Цех")} */}
       {role === 'Руководство' && renderLink("/pages/testov", "Цех в 3d")}
       {/* {renderLink("/pages/createApplications", "Новая форма заявки")} */}
@@ -125,6 +126,7 @@ const Navbar: React.FC = () => {
                 {(role === 'Руководство' || role === 'Оператор') && renderLink("/pages/data-entry", "Станица оператора")}
                 {(role === 'Руководство' || role === 'Мастер') && renderLink("/pages/master", "Страница мастера")}
                 {role === 'Руководство' && renderLink("/pages/adminka", "Админка")}
+                {role === 'Руководство' && renderLink("/pages/managerPages", "Страница руководителя")}
                 {/* {role === 'Руководство' && renderLink("/pages/ceh", "Цех")} */}
                 {role === 'Руководство' && renderLink("/pages/testov", "Цех в 3d")}
                 {/* {renderLink("/pages/createApplications", "Новая форма заявки")} */}

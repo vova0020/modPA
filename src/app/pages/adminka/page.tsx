@@ -17,8 +17,8 @@ const AdminPage: React.FC = () => {
     return (
         <div style={{ minHeight: '100vh', overflowY: 'auto' }}>
         <Navbar />
-        <div style={{ width: '100%', padding: '10px' }}>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ width: '100%',  padding: '10px' }}>
+          <div style={{ width: '100%', maxHeight:'800px' , display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ width: '49%', padding: '10px' }}>
               <CreateUsers />
             </div>
@@ -26,7 +26,7 @@ const AdminPage: React.FC = () => {
               <CreateSecktors />
             </div>
           </div>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ width: '100%', maxHeight:'800px' , display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ width: '49%', padding: '10px' }}>
               <CreateStanok />
             </div>
@@ -34,7 +34,7 @@ const AdminPage: React.FC = () => {
               <CreateUnitMeasurement />
             </div>
           </div>
-          <div>
+          <div style={{ width: '100%', maxHeight:'800px'  }}>
             <CreateReasonsDowntime />
           </div>
         </div>

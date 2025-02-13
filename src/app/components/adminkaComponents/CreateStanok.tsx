@@ -46,7 +46,7 @@ export default function CreateSectors() {
     const getSectors = async () => {
         try {
             const response = await axios.get('/api/adminka/updateStanock');
-            setStanock(response.data.sort((a: Sector, b: Sector) => a.id - b.id));
+            setStanock(response.data.sort((a: Sector, b: Sector) => a.id - b.id));            
             const response2 = await axios.get('/api/adminka/updateSector');
             setSectors(response2.data.sort((a, b) => a.id - b.id));
             const response3 = await axios.get('/api/adminka/updateUnit');
