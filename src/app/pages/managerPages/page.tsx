@@ -311,7 +311,8 @@ const AdminPage: React.FC = () => {
 
     // ===== Листы для каждого станка (как ранее) =====
     for (const machine of filteredMachines) {
-      let sheetName = machine.name;
+      // Очистка имени листа от недопустимых символов
+      let sheetName = machine.name.replace(/[*?:\\\/[\]]/g, '');
       if (sheetName.length > 31) {
         sheetName = sheetName.substring(0, 31);
       }
